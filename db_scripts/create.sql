@@ -46,6 +46,19 @@ create table scoreboard (
     sbs_state varchar(60) not null,
     primary key (sbs_id));
 
+create table card (
+    card_id is not null auto_increment,
+    card_name varchar(50) not null,
+    card_atk int not null,
+    card_def int not null,
+    card_abl varchar(150),
+    card_desc varchar(150),
+    primary key (card_id));
+
+create table card_state (
+    card_st_id is not null auto_increment,
+    card_st_state varchar(60) not null,
+    primary key (card_st_id));
 
 # Foreign Keys
 
