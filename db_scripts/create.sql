@@ -1,6 +1,6 @@
-create database mygame;
+create database stickmanverse;
 
-use mygame;
+use stickmanverse;
 
 create table user (
     usr_id int not null auto_increment,
