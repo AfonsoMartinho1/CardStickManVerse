@@ -41,7 +41,7 @@ create table scoreboard (
     sb_points int not null,
     primary key (sb_id));
 
- create table scoreboard_state (
+create table scoreboard_state (
     sbs_id int not null auto_increment,
     sbs_state varchar(60) not null,
     primary key (sbs_id));
@@ -55,10 +55,25 @@ create table card (
     card_desc varchar(150),
     primary key (card_id));
 
+create table user_game_card (
+    ugc_id int not null auto_increment,
+    ugc_user_game_id int not null,
+    ugc_crd_id int not null,
+    ugc_pos_id int not null,
+    ugc_hp int not null,
+    ugc_hidden tinyint(1) not null,
+    primary key (ugc_id)
+);
+
 create table card_state (
     card_st_id is not null auto_increment,
     card_st_state varchar(60) not null,
     primary key (card_st_id));
+
+create table card_position (
+    pos_id int not null auto_increment,
+    pos_name varchar (60) not null,
+    primary key (pos_id));
 
 # Foreign Keys
 
@@ -78,6 +93,18 @@ alter table user_game add constraint user_game_fk_user_game_state
             foreign key (ug_state_id) references user_game_state(ugst_id) 
 			ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+alter table user_game_card add constraint user_game_card_fk_user_game
+            foreign key (ugc_user_game_id) references user_game(ug_id) 
+			ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+alter table user_game_card add constraint user_game_card_fk_card
+            foreign key (ugc_crd_id) references card(crd_id) 
+			ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+alter table user_game_card add constraint user_game_card_fk_position
+            foreign key (ugc_pos_id) references card_position(pos_id) 
+            ON DELETE NO ACTION ON UPDATE NO ACTION;
+
 alter table scoreboard add constraint scoreboard_fk_user_game
             foreign key (sb_user_game_id) references user_game(ug_id) 
 			ON DELETE NO ACTION ON UPDATE NO ACTION;  
@@ -85,3 +112,5 @@ alter table scoreboard add constraint scoreboard_fk_user_game
 alter table scoreboard add constraint scoreboard_fk_scoreboard_state
             foreign key (sb_state_id) references scoreboard_state(sbs_id) 
 			ON DELETE NO ACTION ON UPDATE NO ACTION;  
+
+
