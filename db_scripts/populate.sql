@@ -17,7 +17,7 @@ insert into scoreboard_state (sbs_state) values ('Won');
 
 insert into card_position (pos_name) values ('Deck'),('Hand'),('Slot 1'),('Slot 2'),('Slot 3'),('Cemitery');
 
-insert into card (crd_name, card_atk, card_def,  card_abl, card_desc) values 
+insert into card (crd_name, crd_atk, crd_def,  crd_abl, crd_desc) values 
    ("Bob",500,500,"Switches the players hp with the opponents hp.","Just a regular stickman with an average life."),
    ("Ninja",600,400,"Attacks twice.","A lonely warrior that walks on the shadows looking to avenge his village."),
    ("Angel",300,300,"Cures 20% of the players missing health.","Comes from the sky and uses his divine power to protect the weaker."),
@@ -64,7 +64,7 @@ INSERT INTO user_game_card VALUES
    (17,1,17,1,1,1),
    (18,1,18,1,1,1),
    (19,1,19,1,1,1),
-   (20,1,20,1,1,1);
+   (20,1,20,1,1,1),
 # ------------ player 2 deck
    (21,2,1,1,1,1),
    (22,2,2,1,1,1),

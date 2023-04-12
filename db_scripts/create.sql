@@ -47,13 +47,13 @@ create table scoreboard_state (
     primary key (sbs_id));
 
 create table card (
-    card_id is not null auto_increment,
-    card_name varchar(50) not null,
-    card_atk int not null,
-    card_def int not null,
-    card_abl varchar(150),
-    card_desc varchar(150),
-    primary key (card_id));
+    crd_id int not null auto_increment,
+    crd_name varchar(50) not null,
+    crd_atk int not null,
+    crd_def int not null,
+    crd_abl varchar(150),
+    crd_desc varchar(250),
+    primary key (crd_id));
 
 create table user_game_card (
     ugc_id int not null auto_increment,
@@ -64,11 +64,6 @@ create table user_game_card (
     ugc_hidden tinyint(1) not null,
     primary key (ugc_id)
 );
-
-create table card_state (
-    card_st_id is not null auto_increment,
-    card_st_state varchar(60) not null,
-    primary key (card_st_id));
 
 create table card_position (
     pos_id int not null auto_increment,
