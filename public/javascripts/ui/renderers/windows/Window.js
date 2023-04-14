@@ -6,7 +6,7 @@ class Window {
         this.height = height;
         this.opened = false;
         this.buttonList = [];
-        this.createButton('X',x+width-35,y+5,()=> { this.close()});
+        this.createButton('X',x+width-35,y+50,()=> { this.close()});
     }
 
     createButton(name, x,y, action, widthCenter) {
