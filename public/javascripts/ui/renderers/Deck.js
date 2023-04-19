@@ -45,11 +45,11 @@ class Deck {
     static titleHeight=50;
     static nCards = 3;
 
-    constructor(title,cardsInfo,x,y,clickAction,cardImg) {
+    constructor(title, cardsInfo, x, y, clickAction, cardImg) {
         this.title = title;
         this.x = x;
         this.y = y;
-        this.width = Card.width*Deck.nCards;
+        this.width = Card.width * Deck.nCards;
         this.clickAction = clickAction;
         this.cardImg = cardImg;
         this.cards = this.createCards(cardsInfo);
@@ -59,7 +59,7 @@ class Deck {
         let cards = [];
         let x = this.x;
         for (let cardInfo of cardsInfo) {
-            cards.push(new Card(cardInfo,x,this.y+Deck.titleHeight,this.cardImg));
+            cards.push(new Card(cardInfo, x, this.y+Deck.titleHeight, this.cardImg));
             x += Card.width;
         }
         return cards;
@@ -76,7 +76,7 @@ class Deck {
         noStroke();
         textSize(28);
         textAlign(CENTER,CENTER);
-        text(this.title,this.x,this.y,this.width,Deck.titleHeight);
+        text(this.title, this.x, this.y, this.width, Deck.titleHeight);
         for (let card of this.cards) {
             card.draw();
         }

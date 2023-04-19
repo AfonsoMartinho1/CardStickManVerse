@@ -15,7 +15,7 @@ insert into user_game_state (ugst_state) values ('End');
 insert into scoreboard_state (sbs_state) values ('Lost');
 insert into scoreboard_state (sbs_state) values ('Won');
 
-insert into card_position (pos_name) values ('Deck'),('Hand'),('Slot 1'),('Slot 2'),('Slot 3'),('Cemitery');
+insert into card_position (pos_name) values ('Deck'),('Hand 1'),('Hand 2'),('Hand 3'),('Hand 4'),('Hand 5'),('Hand 6'),('Hand 7'),('Hand 8'),('Slot 1'),('Slot 2'),('Slot 3'),('Cemitery');
 
 insert into card (crd_name, crd_atk, crd_def,  crd_abl, crd_desc) values 
    ("Bob",500,500,"Switches the players hp with the opponents hp.","Just a regular stickman with an average life."),
