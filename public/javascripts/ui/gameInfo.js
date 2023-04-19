@@ -2,20 +2,26 @@
 // we only have one game info so everything is static
 class GameInfo  {
     // settings variables
-    static width = 1200;
-    static height = 600;
+    static width = 1350;
+    static height = 730;
 
     static loading = true;
 
     // data
     static game;
     static matchDecks;
+    static matchBoard;
+    static matchRandomDeck;
     static images = {};
     static sounds = {};
 
     // rendererers
     static playerDeck;
     static oppDeck;
+    static playerBoard;
+    static oppBoard;
+    static playerRandomDeck;
+    static oppRandomDeck;
     static scoreBoard;
     static scoreWindow;
 

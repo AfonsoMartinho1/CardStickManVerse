@@ -18,6 +18,34 @@ router.get('/auth', auth.verifyAuth, async function (req, res, next) {
     }
 });
 
+router.get('/auth/board', auth.verifyAuth, async function (req, res, next) {
+    try {
+        console.log("Get decks of the game for authenticated user");
+        if (!req.game || req.game.opponents.length == 0) {
+            res.status(400).send({msg:"Your are not in a game or are still waiting for another player."});
+        } 
+        let result = await MatchDecks.getBoardDeck(req.game);
+        res.status(result.status).send(result.result);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
+
+router.get('/auth/deck', auth.verifyAuth, async function (req, res, next) {
+    try {
+        console.log("Get decks of the game for authenticated user");
+        if (!req.game || req.game.opponents.length == 0) {
+            res.status(400).send({msg:"Your are not in a game or are still waiting for another player."});
+        } 
+        let result = await MatchDecks.getRandomDeck(req.game);
+        res.status(result.status).send(result.result);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
+
 router.patch('/play', auth.verifyAuth, async function (req, res, next) {
     try {
         console.log("Play card with id: ",req.body.deckId);

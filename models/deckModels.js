@@ -1,5 +1,5 @@
 const pool = require("../config/database");
-const Settings = require("./gameSettings");
+const Settings = require("../models/gameSettings")
 
 function fromDBCardToCard(dbCard) {
     return new Card(dbCard.crd_id,dbCard.ugc_id,
@@ -46,7 +46,7 @@ class MatchDecks {
     static async genPlayerDeck(playerId) {
         try {
             let cards =[];
-            for (let i=0; i < Settings.nCards; i++) {
+            for (let i=0; i < Settings.initCards; i++) {
                 let result = await Card.genCard(playerId);
                 cards.push(result.result);
             }
@@ -73,7 +73,31 @@ class MatchDecks {
         try {
             let [dbcards] = await pool.query(`Select * from card
             inner join user_game_card on ugc_crd_id = crd_id
-            where ugc_user_game_id = ? or ugc_user_game_id = ?`, 
+            where ugc_pos_id = 2 and (ugc_user_game_id = ? or ugc_user_game_id = ?)`, 
+                [game.player.id, game.opponents[0].id]);
+            let playerCards = [];
+            let oppCards = [];
+            for(let dbcard of dbcards) {
+                let card = fromDBCardToCard(dbcard);
+                if (dbcard.ugc_user_game_id == game.player.id) {
+                    playerCards.push(card);
+                } else {
+                    let c = new Card();
+                    oppCards.push(c);
+                }
+            }
+            return {status:200, result: new MatchDecks(playerCards,oppCards)};
+        } catch (err) {
+            console.log(err);
+            return { status: 500, result: err };
+        }
+    }
+
+    static async getBoardDeck(game) {
+        try {
+            let [dbcards] = await pool.query(`Select * from card
+            inner join user_game_card on ugc_crd_id = crd_id
+            where (ugc_pos_id = 3 or ugc_pos_id = 4 or ugc_pos_id = 5) and (ugc_user_game_id = ? or ugc_user_game_id = ?)`, 
                 [game.player.id, game.opponents[0].id]);
             let playerCards = [];
             let oppCards = [];
@@ -91,6 +115,31 @@ class MatchDecks {
             return { status: 500, result: err };
         }
     }
+
+    static async getRandomDeck(game) {
+        try {
+            let [dbcards] = await pool.query(`Select * from card
+            inner join user_game_card on ugc_crd_id = crd_id
+            where (ugc_pos_id = 1) and (ugc_user_game_id = ? or ugc_user_game_id = ?)`, 
+                [game.player.id, game.opponents[0].id]);
+            let playerCards = [];
+            let oppCards = [];
+            for(let dbcard of dbcards) {
+                let card = fromDBCardToCard(dbcard);
+                if (dbcard.ugc_user_game_id == game.player.id) {
+                    playerCards.push(card);
+                } else {
+                    let c = new Card();
+                    oppCards.push(c);
+                }
+            }
+            return {status:200, result: new MatchDecks(playerCards,oppCards)};
+        } catch (err) {
+            console.log(err);
+            return { status: 500, result: err };
+        }
+    }
+    
 }
 
 

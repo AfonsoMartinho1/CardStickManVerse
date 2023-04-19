@@ -12,35 +12,16 @@ a {
   font-size: larger;
 }
 
-#matches, #scores {
+#matches {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
 }
 
-#matches section, #scores section {
+#matches section {
   background-color: crimson;
   color: white;
   margin: 5px;
   padding: 5px;
-}
-
-#scores td {
-  padding: 5px 20px;
-}
-
-/* Game CSS*/
-#game {
-  position: relative;
-}
-
-button.game {
-  font-size: 1.5em;
-  background-color: #2ea44f;
-  color: white;
-  border: 1px solid rgba(27, 31, 35, .15);
-  border-radius: 6px;
-  text-align: center;
-  font-weight: bold;
 }
 

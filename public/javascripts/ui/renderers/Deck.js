@@ -1,6 +1,6 @@
 class Card {
-    static width = 210;
-    static height = 315;
+    static width = 100;
+    static height = 150;
     constructor(card,x,y,img) {
         this.card = card;
         this.x = x;

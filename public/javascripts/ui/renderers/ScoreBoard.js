@@ -3,8 +3,8 @@
 class ScoreBoard {
     static width = 300;
     static height = 100;
-    static x = 10;
-    static y = 10;
+    static x = 1;
+    static y = 1;
     constructor(game) {
         this.game = game;
     }

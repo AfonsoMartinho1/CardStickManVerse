@@ -31,6 +31,35 @@ async function requestDecks() {
     }
 }
 
+async function requestBoard() {
+    try {
+        const response = await fetch(`/api/decks/auth/board`);
+        let result = await response.json();
+        return { successful: response.status == 200,
+                 unauthenticated: response.status == 401,
+                 board: result};
+    } catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+        return {err: err};
+    }
+}
+
+async function requestRandomDeck() {
+    try {
+        const response = await fetch(`/api/decks/auth/deck`);
+        let result = await response.json();
+        return { successful: response.status == 200,
+                 unauthenticated: response.status == 401,
+                 randomdeck: result};
+    } catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+        return {err: err};
+    }
+}
+
+
 async function requestPlayCard(deckId) {
     try {
         const response = await fetch(`/api/decks/play`, 

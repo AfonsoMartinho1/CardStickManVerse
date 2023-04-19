@@ -24,11 +24,43 @@ async function getDecksInfo() {
     } else {
         GameInfo.matchDecks = result.decks;
         if (GameInfo.playerDeck) GameInfo.playerDeck.update(GameInfo.matchDecks.mycards); 
-        else GameInfo.playerDeck = new Deck("Your cards",
-            GameInfo.matchDecks.mycards,30,300,playCard,GameInfo.images.card);
+        else GameInfo.playerDeck = new Deck(" ",
+            GameInfo.matchDecks.mycards,GameInfo.width/2-200,GameInfo.height/2+150,playCard,GameInfo.images.card);
         if (GameInfo.oppDeck) GameInfo.oppDeck.update(GameInfo.matchDecks.oppcards); 
-        else GameInfo.oppDeck = new Deck("Opponent cards",
-            GameInfo.matchDecks.oppcards,GameInfo.width-30-Deck.nCards*Card.width,300,null,GameInfo.images.card);
+        else GameInfo.oppDeck = new Deck(" ",
+            GameInfo.matchDecks.oppcards,GameInfo.width/2-200,GameInfo.height/2-400,null,GameInfo.images.card);
+    }
+}
+
+async function getBoardInfo() {
+    let result = await requestBoard();
+    if (!result.successful) {
+        alert("Something is wrong with the game please login again!");
+        window.location.pathname = "index.html";
+    } else {
+        GameInfo.matchBoard = result.board;
+        if (GameInfo.playerBoard) GameInfo.playerBoard.update(GameInfo.matchBoard.mycards); 
+        else GameInfo.playerBoard = new Deck(" ",
+            GameInfo.matchBoard.mycards,GameInfo.width/2-200,GameInfo.height/2-40,playCard,GameInfo.images.card);
+        if (GameInfo.oppBoard) GameInfo.oppBoard.update(GameInfo.matchBoard.oppcards); 
+        else GameInfo.oppBoard = new Deck(" ",
+            GameInfo.matchBoard.oppcards,GameInfo.width/2-200,GameInfo.height/2-200,null,GameInfo.images.card);
+    }
+}
+
+async function getRandomDeckInfo() {
+    let result = await requestRandomDeck();
+    if (!result.successful) {
+        alert("Something is wrong with the game please login again!");
+        window.location.pathname = "index.html";
+    } else {
+        GameInfo.matchRandomDeck = result.randomdeck;
+        if (GameInfo.playerRandomDeck) GameInfo.playerRandomDeck.update(GameInfo.matchRandomDeck.mycards); 
+        else GameInfo.playerRandomDeck = new Deck(" ",
+            GameInfo.matchRandomDeck.mycards,GameInfo.width/2+530,GameInfo.height/2,playCard,GameInfo.images.card);
+        if (GameInfo.oppRandomDeck) GameInfo.oppRandomDeck.update(GameInfo.matchRandomDeck.oppcards); 
+        else GameInfo.oppRandomDeck = new Deck(" ",
+            GameInfo.matchRandomDeck.oppcards,GameInfo.width/2-640,GameInfo.height/2-230,null,GameInfo.images.card);
     }
 }
 
@@ -40,7 +72,7 @@ async function playCard(card) {
         if (result.successful) {
             await getGameInfo();
             await getDecksInfo();
-            await getShipsInfo();
+            
         }
         alert(result.msg);
     }

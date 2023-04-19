@@ -4,17 +4,19 @@ const State = require("./statesModel");
 // For now it is only an auxiliary class to hold data in here 
 // so no need to create a model file for it
 class Player {
-    constructor(id,name,state,order) {
+    constructor(id,name,state,order,hp) {
         this.id = id;        
         this.name = name;
         this.state= state;
         this.order = order;
+        this.hp = hp;
     }
     export() {
         let player = new Player();
         player.name = this.name;
         player.state = this.state.export();
         player.order = this.order;
+        player.hp = this.hp;
         return player;
     }
 }

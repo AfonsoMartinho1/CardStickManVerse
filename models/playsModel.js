@@ -1,4 +1,6 @@
 const pool = require("../config/database");
+const MatchDecks = require("./deckModels");
+const Settings = require("../models/gameSettings");
 
 // auxiliary function to check if the game ended 
 async function checkEndGame(game) {
@@ -28,6 +30,7 @@ class Play {
             await pool.query(`Update game set gm_state_id=? where gm_id = ?`, [2, game.id]);
 
             // ---- Specific rules for each game start bellow
+            await MatchDecks.genPlayerDeck(p1Id)
 
         } catch (err) {
             console.log(err);
