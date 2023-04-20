@@ -72,7 +72,7 @@ class MatchDecks {
         try {
             let [dbcards] = await pool.query(`Select * from card
             inner join user_game_card on ugc_crd_id = crd_id
-            where (ugc_pos_id = 2) and (ugc_user_game_id = ? or ugc_user_game_id = ?)`, 
+            where (ugc_pos_id = 2)`, 
                 [game.player.id, game.opponents[0].id]);
             let playerCards = [];
             let oppCards = [];
@@ -97,7 +97,7 @@ class MatchDecks {
         try {
             let [dbcards] = await pool.query(`Select * from card
             inner join user_game_card on ugc_crd_id = crd_id
-            where (ugc_pos_id = 3 or ugc_pos_id = 4 or ugc_pos_id = 5) and (ugc_user_game_id = ? or ugc_user_game_id = ?)`, 
+            where (ugc_pos_id = 3 or ugc_pos_id = 4 or ugc_pos_id = 5)`, 
                 [game.player.id, game.opponents[0].id]);
             let playerCards = [];
             let oppCards = [];
@@ -120,7 +120,7 @@ class MatchDecks {
         try {
             let [dbcards] = await pool.query(`Select * from card
             inner join user_game_card on ugc_crd_id = crd_id
-            where (ugc_pos_id = 1) and (ugc_user_game_id = ? or ugc_user_game_id = ?)`, 
+            where (ugc_pos_id = 1)`, 
                 [game.player.id, game.opponents[0].id]);
             let playerCards = [];
             let oppCards = [];
