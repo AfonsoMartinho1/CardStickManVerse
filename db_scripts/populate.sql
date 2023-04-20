@@ -15,7 +15,7 @@ insert into user_game_state (ugst_state) values ('End');
 insert into scoreboard_state (sbs_state) values ('Lost');
 insert into scoreboard_state (sbs_state) values ('Won');
 
-insert into card_position (pos_name) values ('Deck'),('Hand 1'),('Hand 2'),('Hand 3'),('Hand 4'),('Hand 5'),('Hand 6'),('Hand 7'),('Hand 8'),('Slot 1'),('Slot 2'),('Slot 3'),('Cemitery');
+insert into card_position (pos_name) values ('Deck'),('Hand'),('Slot 1'),('Slot 2'),('Slot 3'),('Cemitery');
 
 insert into card (crd_name, crd_atk, crd_def,  crd_abl, crd_desc) values 
    ("Bob",500,500,"Switches the players hp with the opponents hp.","Just a regular stickman with an average life."),
@@ -49,9 +49,9 @@ INSERT INTO user_game_card VALUES
    (2,1,2,2,1,1),
    (3,1,3,4,1,1),
    (4,1,4,1,1,1),
-   (5,1,5,1,1,1),
+   (5,1,5,2,1,1),
    (6,1,6,1,1,1),
-   (7,1,7,1,1,1),
+   (7,1,7,2,1,1),
    (8,1,8,1,1,1),
    (9,1,9,1,1,1),
    (10,1,10,1,1,1),
@@ -71,11 +71,11 @@ INSERT INTO user_game_card VALUES
    (23,2,3,1,1,1),
    (24,2,4,1,1,1),
    (25,2,5,1,1,1),
-   (26,2,6,1,1,1),
-   (27,2,7,1,1,1),
-   (28,2,8,1,1,1),
-   (29,2,9,1,1,1),
-   (30,2,10,1,1,1),
+   (26,2,6,2,1,1),
+   (27,2,7,2,1,1),
+   (28,2,8,2,1,1),
+   (29,2,9,4,1,1),
+   (30,2,10,3,1,1),
    (31,2,11,1,1,1),
    (32,2,12,1,1,1),
    (33,2,13,1,1,1),

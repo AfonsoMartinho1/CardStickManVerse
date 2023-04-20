@@ -23,7 +23,7 @@ class Card {
             let rndCard = fromDBCardToCard(cards[Math.floor(Math.random() * cards.length)]);
             // insert the card
             let [result] = await pool.query(`Insert into user_game_card (ugc_user_game_id,ugc_crd_id,ugc_pos_id, ugc_hp, ugc_hidden)
-                  values (?,?,?,?,?)`, [playerId,rndCard.cardId,true,100,true]);
+                  values (?,?,?,?,?)`, [playerId,rndCard.cardId,true,100,false]);
             return {status:200, result: rndCard};
         } catch (err) {
             console.log(err);
@@ -72,7 +72,7 @@ class MatchDecks {
         try {
             let [dbcards] = await pool.query(`Select * from card
             inner join user_game_card on ugc_crd_id = crd_id
-            where (ugc_pos_id = 2 or ugc_pos_id = 3 or ugc_pos_id = 4 or ugc_pos_id = 5 or ugc_pos_id = 6 or ugc_pos_id = 7 or ugc_pos_id = 8 or ugc_pos_id = 9) and (ugc_user_game_id = ? or ugc_user_game_id = ?)`, 
+            where (ugc_pos_id = 2) and (ugc_user_game_id = ? or ugc_user_game_id = ?)`, 
                 [game.player.id, game.opponents[0].id]);
             let playerCards = [];
             let oppCards = [];
@@ -90,13 +90,14 @@ class MatchDecks {
             console.log(err);
             return { status: 500, result: err };
         }
+        
     }
 
     static async getBoardDeck(game) {
         try {
             let [dbcards] = await pool.query(`Select * from card
             inner join user_game_card on ugc_crd_id = crd_id
-            where (ugc_pos_id = 10 or ugc_pos_id = 11 or ugc_pos_id = 12) and (ugc_user_game_id = ? or ugc_user_game_id = ?)`, 
+            where (ugc_pos_id = 3 or ugc_pos_id = 4 or ugc_pos_id = 5) and (ugc_user_game_id = ? or ugc_user_game_id = ?)`, 
                 [game.player.id, game.opponents[0].id]);
             let playerCards = [];
             let oppCards = [];
