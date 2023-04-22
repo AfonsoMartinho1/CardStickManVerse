@@ -22,8 +22,8 @@ class Card {
             let [cards] = await pool.query(`select * from card `);
             let rndCard = fromDBCardToCard(cards[Math.floor(Math.random() * cards.length)]);
             // insert the card
-            let [result] = await pool.query(`Insert into user_game_card (ugc_user_game_id,ugc_crd_id,ugc_pos_id, ugc_hp, ugc_hidden)
-                  values (?,?,?,?,?)`, [playerId,rndCard.cardId,true,100,false]);
+            let [result] = await pool.query(`Insert into user_game_card (ugc_user_game_id,ugc_crd_id,ugc_pos_id)
+                  values (?,?,?)`, [playerId,rndCard.cardId,true]);
             return {status:200, result: rndCard};
         } catch (err) {
             console.log(err);
@@ -72,7 +72,7 @@ class MatchDecks {
         try {
             let [dbcards] = await pool.query(`Select * from card
             inner join user_game_card on ugc_crd_id = crd_id
-            where (ugc_pos_id = 2)`, 
+            where (ugc_pos_id = 2) and (ugc_user_game_id = ? or ugc_user_game_id = ?)`, 
                 [game.player.id, game.opponents[0].id]);
             let playerCards = [];
             let oppCards = [];
@@ -97,7 +97,7 @@ class MatchDecks {
         try {
             let [dbcards] = await pool.query(`Select * from card
             inner join user_game_card on ugc_crd_id = crd_id
-            where (ugc_pos_id = 3 or ugc_pos_id = 4 or ugc_pos_id = 5)`, 
+            where (ugc_pos_id = 3 or ugc_pos_id = 4 or ugc_pos_id = 5) and (ugc_user_game_id = ? or ugc_user_game_id = ?)`, 
                 [game.player.id, game.opponents[0].id]);
             let playerCards = [];
             let oppCards = [];
@@ -116,30 +116,19 @@ class MatchDecks {
         }
     }
 
-    static async getRandomDeck(game) {
+    static async getPlace(gameId, deckPosition) {
         try {
-            let [dbcards] = await pool.query(`Select * from card
-            inner join user_game_card on ugc_crd_id = crd_id
-            where (ugc_pos_id = 1)`, 
-                [game.player.id, game.opponents[0].id]);
-            let playerCards = [];
-            let oppCards = [];
-            for(let dbcard of dbcards) {
-                let card = fromDBCardToCard(dbcard);
-                if (dbcard.ugc_user_game_id == game.player.id) {
-                    playerCards.push(card);
-                } else {
-                    let c = new Card();
-                    oppCards.push(c);
-                }
+            const game = await Game.getById(gameId);
+            if (!game) {
+                return { status: 404, result: 'Game not found' };
             }
-            return {status:200, result: new MatchDecks(playerCards,oppCards)};
+            const deck = await Deck.getDeck(game, deckPosition);
+            return {status:200, result: new MatchPlace(playerCards, oppCards)}
         } catch (err) {
             console.log(err);
             return { status: 500, result: err };
         }
     }
-    
 }
 
 

@@ -59,19 +59,31 @@ async function getBoardInfo() {
     }
 }
 
-async function getRandomDeckInfo() {
-    let result = await requestRandomDeck();
-    if (!result.successful) {
-        alert("Something is wrong with the game please login again!");
-        window.location.pathname = "index.html";
-    } else {
-        GameInfo.matchRandomDeck = result.randomdeck;
+async function getPlaceInfo(placeId) {
+    try {
+        const response = await fetch(`/api/decks/place/${placeId}`, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "GET"
+        });
+        let result = await response.json();
+        if (!result.successful) {
+            alert(result.msg);
+            window.location.pathname = "index.html";
+        } else {
+            GameInfo.matchPlace = result.randomdeck;
         if (GameInfo.playerRandomDeck) GameInfo.playerRandomDeck.update(GameInfo.matchRandomDeck.mycards); 
         else GameInfo.playerRandomDeck = new Deck(" ",
             GameInfo.matchRandomDeck.mycards,GameInfo.width/2+530,GameInfo.height/2,playCard,GameInfo.images.card);
         if (GameInfo.oppRandomDeck) GameInfo.oppRandomDeck.update(GameInfo.matchRandomDeck.oppcards); 
         else GameInfo.oppRandomDeck = new Deck(" ",
             GameInfo.matchRandomDeck.oppcards,GameInfo.width/2-640,GameInfo.height/2-230,null,GameInfo.images.card);
+        }
+    } catch (err) {
+        console.log(err);
+        alert("Something went wrong while getting the place information. Please try again later.");
     }
 }
 
@@ -83,8 +95,8 @@ async function playCard(card) {
         if (result.successful) {
             await getGameInfo();
             await getDecksInfo();
-            await getBoardInfo();
-            await getRandomDeckInfo();
+            
+            
             
         }
         alert(result.msg);

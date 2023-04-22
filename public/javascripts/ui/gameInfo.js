@@ -11,7 +11,7 @@ class GameInfo  {
     static game;
     static matchDecks;
     static matchBoard;
-    static matchRandomDeck;
+    static matchPlace;
     static images = {};
     static sounds = {};
 
@@ -20,8 +20,8 @@ class GameInfo  {
     static oppDeck;
     static playerBoard;
     static oppBoard;
-    static playerRandomDeck;
-    static oppRandomDeck;
+    static playerPlace;
+    static oppPlace;
     static scoreBoard;
     static scoreWindow;
 
