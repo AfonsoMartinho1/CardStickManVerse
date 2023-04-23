@@ -93,13 +93,49 @@ async function placeDeckCard(placeId) {
 
 async function playCard(card) {
     if (confirm(`Do you want to play the "${card.name}" card?`)) {
-        let result = await requestPlayCard(card.deckId);
-        if (result.successful) {
+      let result = await requestPlayCard(card.deckId, card.id);
+      if (result.successful) {
+        let { position, text } = await promptCardPosition();
+        if (position) {
+          const placeId = parseInt(position);
+          const placeResponse = await requestPlaceCard(card.deckId, card.id, placeId);
+          if (placeResponse.successful) {
             await getGameInfo();
             await getDecksInfo();
+            alert(text);
+          } else {
+            alert(placeResponse.err);
+          }
         }
-        alert(result.msg);
+      } else {
+        alert(result.err);
+      }
     }
+  }
+
+  async function promptCardPosition() {
+    let position = prompt("What position would you like to place the card? 1, 2 or 3?");
+    let text;
+    if (position && !isNaN(position) && position >= 1 && position <= 3) {
+      switch (position) {
+        case "1":
+          text = "Card placed at position 1";
+          break;
+        case "2":
+          text = "Card placed at position 2";
+          break;
+        case "3":
+          text = "Card placed at position 3";
+          break;
+        default:
+          text = "Please introduce a valid position. 1, 2 or 3!";
+      }
+      alert(text); // display the message before returning the object
+    } else {
+      text = "Please introduce a valid position. 1, 2 or 3!";
+      alert(text); // display the message before returning the object
+    }
+    return { position, text };
 }
 
 async function endturnAction() {
