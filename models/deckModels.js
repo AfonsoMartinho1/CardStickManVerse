@@ -116,19 +116,35 @@ class MatchDecks {
         }
     }
 
-    static async getPlace(gameId, deckPosition) {
+    static async getPlaceDeck(game) {
         try {
-            const game = await Game.getById(gameId);
-            if (!game) {
-                return { status: 404, result: 'Game not found' };
+          const [dbcards] = await pool.query(`Select * from card
+          inner join user_game_card on ugc_crd_id = crd_id
+          where (ugc_pos_id = 3 or ugc_pos_id = 4 or ugc_pos_id = 5) and (ugc_user_game_id = ? or ugc_user_game_id = ?)`
+          , [game.player.id, game.opponents[0].id]);
+      
+          if (!dbcards.length) {
+            return { status: 404, result: 'Cards not found' };
+          }
+      
+          const playerCards = [];
+          const oppCards = [];
+      
+          for (let dbcard of dbcards) {
+            let card = fromDBCardToCard(dbcard);
+            if (dbcard.ugc_user_game_id == game.player.id) {
+              playerCards.push(card);
+            } else {
+              oppCards.push(card);
             }
-            const deck = await Deck.getDeck(game, deckPosition);
-            return {status:200, result: new MatchPlace(playerCards, oppCards)}
+          }
+      
+          return { status: 200, result: new MatchDecks(playerCards, oppCards) };
         } catch (err) {
-            console.log(err);
-            return { status: 500, result: err };
+          console.log(err);
+          return { status: 500, result: err };
         }
-    }
+      }
 }
 
 

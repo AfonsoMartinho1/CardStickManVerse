@@ -59,7 +59,11 @@ async function getBoardInfo() {
     }
 }
 
-async function getPlaceInfo(placeId) {
+async function placeDeckCard(placeId) {
+    if (!placeId) {
+        alert("Invalid placeId");
+        return;
+    }
     try {
         const response = await fetch(`/api/decks/place/${placeId}`, {
             headers: {
@@ -88,16 +92,11 @@ async function getPlaceInfo(placeId) {
 }
 
 async function playCard(card) {
-    if (!card.active) {
-        alert("That card was already played");
-    } else if (confirm(`Do you want to play the "${card.name}" card?`)) {
+    if (confirm(`Do you want to play the "${card.name}" card?`)) {
         let result = await requestPlayCard(card.deckId);
         if (result.successful) {
             await getGameInfo();
             await getDecksInfo();
-            
-            
-            
         }
         alert(result.msg);
     }

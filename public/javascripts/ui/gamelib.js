@@ -5,7 +5,6 @@ async function refresh() {
         await  getGameInfo();
         await getDecksInfo();
         await getBoardInfo();  
-        await getPlaceInfo();
         if (GameInfo.game.player.state != "Waiting") {
             // The moment we pass from waiting to play
             GameInfo.prepareUI();
@@ -37,7 +36,7 @@ async function setup() {
 
     await getDecksInfo();
     await getBoardInfo(); 
-    await getPlaceInfo();
+    await placeDeckCard();
 
     GameInfo.prepareUI();
     
@@ -56,12 +55,19 @@ function draw() {
         GameInfo.scoreWindow.draw();
     } else  {
         GameInfo.scoreBoard.draw();
-        GameInfo.playerDeck.draw();
-        GameInfo.oppDeck.draw();
-        GameInfo.playerBoard.draw();
-        GameInfo.oppBoard.draw();
-        GameInfo.playerPlace.draw();
-        GameInfo.oppPlace.draw();
+        if (GameInfo.playerDeck) {
+            GameInfo.playerDeck.draw();
+          }
+          if (GameInfo.oppDeck) {
+            GameInfo.oppDeck.draw();
+          }
+          if (GameInfo.playerBoard) {
+            GameInfo.playerBoard.draw();
+          }
+          if (GameInfo.oppBoard) {
+            GameInfo.oppBoard.draw();
+          }
+        
     }
 }
 

@@ -63,21 +63,28 @@ async function requestPlayCard(deckId, cardId) {
         if (result.successful) {
             // Prompt the user to choose the position on the board to place the card
             let position = prompt("What position would you like to place the card? 1, 2 or 3?");
-                switch(position) {
-                case "1":
-                text = "Card placed at position 1";
-                break;
-                case "2":
-                text = "Card placed at position 2";
-                break;
-                case "3":
-                text = "Card placed at position 3";
-                break;
-                default:
-                text = "Please introduce a valid position. 1, 2 or 3!";
-                }
+            console.log(position);
+            let text;
+            if (position && !isNaN(position) && position >= 1 && position <= 3) {
+            switch(position) {
+            case "1":
+            text = "Card placed at position 1";
+            break;
+            case "2":
+            text = "Card placed at position 2";
+            break;
+            case "3":
+            text = "Card placed at position 3";
+            break;
+            default:
+            text = "Please introduce a valid position. 1, 2 or 3!";
+        }
+        } else {
+        text = "Please introduce a valid position. 1, 2 or 3!";
+        }
             if (position) {
                 // Send a request to the server to place the card at the chosen position
+                const placeId = parseInt(position);
                 const placeResponse = await fetch(`/api/decks/place`, 
                 {
                     headers: {
@@ -88,12 +95,12 @@ async function requestPlayCard(deckId, cardId) {
                   body: JSON.stringify({
                     deckId: deckId,
                     cardId: cardId,
-                    position: parseInt(position)
+                    position: placeId
                   })
                 });
                 let placeResult = await placeResponse.json();
                 if (placeResult.successful) {
-                    return {successful: true, msg: placeResult.msg};
+                    return {successful: true, msg: text};
                 } else {
                     return {successful: false, err: placeResult.err};
                 }
