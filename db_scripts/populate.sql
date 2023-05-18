@@ -41,7 +41,7 @@ insert into card (crd_name, crd_atk, crd_def,  crd_abl, crd_desc) values
 
 INSERT INTO user VALUES (1,'me','$2b$10$Wemfac2wY/7RSCdKxuYUL.GV2clfhXC66OL76uCpDFUmpYZ/bGZtW','48MnTVJ6sKIvanVHbP5Vx5rysbYrVN4EbYmk4D8xESdfm1hx8jDfNFZGNw9OZs'),(2,'me2','$2b$10$6j2xIDnnxv.TLfBSstbbO.qE7wFTf5envx/uijiFjCP3slsy7EE4K','dQ7NrsbPsuF81xFGNioR1K0tiYkjtxOhemcgMhuFIS68VrFUC9gggm3JCgzkqe');
 INSERT INTO game VALUES (1,1,2);
-INSERT INTO user_game VALUES (1,1,1,1,2),(2,2,2,1,1);
+INSERT INTO user_game VALUES (1,1,1,1,2,5000),(2,2,2,1,1,5000);
 
 INSERT INTO user_game_card VALUES 
 # ------------ player 1 deck

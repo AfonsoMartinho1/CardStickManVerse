@@ -60,34 +60,22 @@ router.patch('/play', auth.verifyAuth, async function (req, res, next) {
     }
 });
 
-router.patch('/place', auth.verifyAuth, async function (req, res, next) {
+router.patch('/updatecard', auth.verifyAuth, async function (req, res, next) {
     try {
-        console.log("Play card with id: ",req.body.deckId);
-        if (!req.game || req.game.opponents.length == 0) {
-            res.status(400).send({msg:"Your are not in a game or are still waiting for another player."});
-        } 
-        let result = await MatchDecks.getPlaceDeck(req.game,req.body.deckId);
-        res.status(result.status).send(result.result);
+      const { deckId, position } = req.body;
+      console.log("Play card with id:", deckId);
+  
+      if (!req.game || req.game.opponents.length == 0) {
+        return res.status(400).send({ msg: "You are not in a game or are still waiting for another player." });
+      }
+  
+      const playResponse = await MatchDecks.playCard(req.game, deckId, position);
+      const { matchDecks, movedCard } = playResponse.result;
+      return res.status(playResponse.status).send({ matchDecks, movedCard });
     } catch (err) {
-        console.log(err);
-        res.status(500).send(err);
+      console.log(err);
+      return res.status(500).send(err);
     }
-});
-
-router.patch('/place/:placeId', auth.verifyAuth, async function (req, res, next) {
-    try {
-        console.log("Place card with id: ",req.body.deckId);
-        if (!req.game || req.game.opponents.length == 0) {
-            res.status(400).send({msg:"Your are not in a game or are still waiting for another player."});
-        }
-        const placeId = parseInt(req.params.placeId);
-        let result = await MatchDecks.placeDeckCard(req.game, req.body.deckId, placeId);
-        res.status(result.status).send(result.result);
-    } catch (err) {
-        console.log(err);
-        res.status(500).send(err);
-    }
-});
-
+  });
 
 module.exports = router;

@@ -26,6 +26,7 @@ create table user_game (
     ug_user_id int not null,
     ug_game_id int not null,
     ug_state_id int not null,
+    ug_hp int not null,
     primary key (ug_id));
 
 create table user_game_state (

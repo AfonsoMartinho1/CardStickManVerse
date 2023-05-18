@@ -59,83 +59,31 @@ async function getBoardInfo() {
     }
 }
 
-async function placeDeckCard(placeId) {
-    if (!placeId) {
-        alert("Invalid placeId");
-        return;
+async function playCard(card) {
+    console.log(Object.keys(card));
+    let position = parseInt(prompt("What position would you like to place the card? 1, 2 or 3?"));
+    
+    //if (confirm(`Do you want to play the "${card.name}" card?`)) {
+    let result = await requestPlayCard(card.deckId, position);
+    console.log(result);
+    if (result.successful) {
+      await getGameInfo();
+      await getDecksInfo();
+    } else {
+      alert(result.err);
     }
-    try {
-        const response = await fetch(`/api/decks/place/${placeId}`, {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            method: "GET"
-        });
-        let result = await response.json();
-        if (!result.successful) {
-            alert(result.msg);
-            window.location.pathname = "index.html";
-        } else {
-            GameInfo.matchPlace = result.randomdeck;
-        if (GameInfo.playerRandomDeck) GameInfo.playerRandomDeck.update(GameInfo.matchRandomDeck.mycards); 
-        else GameInfo.playerRandomDeck = new Deck(" ",
-            GameInfo.matchRandomDeck.mycards,GameInfo.width/2+530,GameInfo.height/2,playCard,GameInfo.images.card);
-        if (GameInfo.oppRandomDeck) GameInfo.oppRandomDeck.update(GameInfo.matchRandomDeck.oppcards); 
-        else GameInfo.oppRandomDeck = new Deck(" ",
-            GameInfo.matchRandomDeck.oppcards,GameInfo.width/2-640,GameInfo.height/2-230,null,GameInfo.images.card);
-        }
-    } catch (err) {
-        console.log(err);
-        alert("Something went wrong while getting the place information. Please try again later.");
-    }
+ // }
 }
 
-async function playCard(card) {
-    if (confirm(`Do you want to play the "${card.name}" card?`)) {
-      let result = await requestPlayCard(card.deckId, card.id);
-      if (result.successful) {
-        let { position, text } = await promptCardPosition();
-        if (position) {
-          const placeId = parseInt(position);
-          const placeResponse = await requestPlaceCard(card.deckId, card.id, placeId);
-          if (placeResponse.successful) {
-            await getGameInfo();
-            await getDecksInfo();
-            alert(text);
-          } else {
-            alert(placeResponse.err);
-          }
-        }
-      } else {
-        alert(result.err);
-      }
-    }
-  }
-
-  async function promptCardPosition() {
-    let position = prompt("What position would you like to place the card? 1, 2 or 3?");
-    let text;
+async function promptCardPosition() {
+     let successful;
     if (position && !isNaN(position) && position >= 1 && position <= 3) {
-      switch (position) {
-        case "1":
-          text = "Card placed at position 1";
-          break;
-        case "2":
-          text = "Card placed at position 2";
-          break;
-        case "3":
-          text = "Card placed at position 3";
-          break;
-        default:
-          text = "Please introduce a valid position. 1, 2 or 3!";
-      }
-      alert(text); // display the message before returning the object
+      return { position, successful:true }  
     } else {
-      text = "Please introduce a valid position. 1, 2 or 3!";
+      text = "Invalid Postion!";
       alert(text); // display the message before returning the object
+      return { position, successful:false };
     }
-    return { position, text };
 }
 
 async function endturnAction() {

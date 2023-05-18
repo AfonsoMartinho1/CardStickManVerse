@@ -2,12 +2,13 @@
 async function refresh() {
     if (GameInfo.game.player.state == "Waiting") { 
         // Every time we are waiting
-        await  getGameInfo();
+        await getGameInfo();
         await getDecksInfo();
-        await getBoardInfo();  
+        await getBoardInfo();
         if (GameInfo.game.player.state != "Waiting") {
             // The moment we pass from waiting to play
             GameInfo.prepareUI();
+            await playCard();
         }
     } 
     // Nothing to do when we are playing since we control all that happens 
@@ -35,8 +36,7 @@ async function setup() {
     GameInfo.endturnButton.addClass('game')
 
     await getDecksInfo();
-    await getBoardInfo(); 
-    await placeDeckCard();
+    await getBoardInfo();
 
     GameInfo.prepareUI();
     
@@ -66,6 +66,12 @@ function draw() {
           }
           if (GameInfo.oppBoard) {
             GameInfo.oppBoard.draw();
+          }
+          if (GameInfo.playerPlay) {
+            GameInfo.playerPlay.draw();
+          }
+          if (GameInfo.oppPlay) {
+            GameInfo.oppPlay.draw();
           }
         
     }

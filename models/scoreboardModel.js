@@ -9,6 +9,7 @@ class PlayerScore {
         this.name = name;
         this.state = state;
         this.points = points;
+        this.hp = hp;
     }
     export() {
         let score = new PlayerScore();
@@ -16,6 +17,7 @@ class PlayerScore {
         score.name = this.name;
         score.state = this.state.name;
         score.points = this.points; 
+        score.hp = this.hp;
         return score;
     }
 

@@ -1,3 +1,4 @@
+
 // Actions
 async function requestEndTurn() {
     try {
@@ -45,56 +46,26 @@ async function requestBoard() {
     }
 }
 
-async function requestPlayCard(deckId, cardId) {
-    try {
-      let position = await promptCardPosition();
-      let text;
-      if (position && !isNaN(position) && position >= 1 && position <= 3) {
-        switch (position) {
-          case 1:
-            text = "Card placed at position 1";
-            break;
-          case 2:
-            text = "Card placed at position 2";
-            break;
-          case 3:
-            text = "Card placed at position 3";
-            break;
-          default:
-            text = "Please introduce a valid position. 1, 2 or 3!";
-        }
-      } else {
-        text = "Please introduce a valid position. 1, 2 or 3!";
-      }
-      if (position) {
-        const placeId = parseInt(position);
-        const response = await fetch(`/api/decks/place`, 
-          {
+async function requestPlayCard(deckId, position) {
+  console.log("deckId:", deckId); // Debugging statement
+  try {
+    const response = await fetch(`/api/decks/updatecard`, 
+        {
             headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
-            method: "PATCH",
-            body: JSON.stringify({
-              deckId: deckId,
-              cardId: cardId,
-              position: placeId
-            })
-          });
-        let result = await response.json();
-        if (result.successful) {
-          return {successful: true, msg: text};
-        } else {
-          return {successful: false, err: result.err};
-        }
-      } else {
-        return {successful: false, err: "User canceled prompt"};
-      }
-    } catch (err) {
-      console.log(err);
-      return {successful: false, err: err};
-    }
+          method: "PATCH",
+          body: JSON.stringify({deckId:deckId,position:position})
+      });
+      // Ask server to play card
+
+      return {successful: true};
+  } catch (err) {
+    console.log(err);
+    return {successful: false, err: err};
   }
+}
 
 async function requestCloseScore() {
     try {

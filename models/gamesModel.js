@@ -14,14 +14,13 @@ class Player {
     export() {
         let player = new Player();
         player.name = this.name;
-        player.state = this.state.export();
-        player.order = this.order;
         player.hp = this.hp;
         return player;
     }
 }
 
 class Game {
+
     constructor(id,turn,state,player,opponents) {
         this.id = id;
         this.turn = turn;
@@ -50,7 +49,7 @@ class Game {
             where ug_game_id=?`, [game.id]);
             for (let dbPlayer of dbPlayers) {
                 let player = new Player(dbPlayer.ug_id,dbPlayer.usr_name,
-                            new State(dbPlayer.ugst_id,dbPlayer.ugst_state),dbPlayer.ug_order);
+                            new State(dbPlayer.ugst_id,dbPlayer.ugst_state),dbPlayer.ug_order,dbPlayer.ug_hp);
                 if (dbPlayer.usr_id == userId) game.player = player;
                 else game.opponents.push(player);
             }
