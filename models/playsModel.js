@@ -52,9 +52,9 @@ class Play {
             await pool.query(`Update game set gm_turn=gm_turn+1 where gm_id = ?`,
             [game.id]);
             // removes the cards of the player that ended and get new cards to the one that will start
-            await MatchDecks.resetPlayerDeck(game.player.id);
+          
             await MatchDecks.genPlayerDeck(game.opponents[0].id);
-            
+
             if (game.player.order == 2) {
                 // Increase the number of turns.
                 await pool.query(`Update game set gm_turn=gm_turn+1 where gm_id = ?`,
@@ -62,6 +62,8 @@ class Play {
 
                 await MatchDecks.combatHandler(game)
             }
+
+            return { status: 200, result: { msg: "Your turn ended." } };
         } catch (err) {
             console.log(err);
             return { status: 500, result: err };

@@ -61,8 +61,6 @@ create table user_game_card (
     ugc_user_game_id int not null,
     ugc_crd_id int not null,
     ugc_pos_id int not null,
-    ugc_hp int not null,
-    ugc_hidden tinyint(1) not null,
     primary key (ugc_id)
 );
 

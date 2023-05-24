@@ -11,9 +11,9 @@ class Card {
         this.cardId = cardId;
         this.deckId = deckId;
         this.name = name;
-        this.effect = hability;
         this.attack = attack;
-        this.type = defence;
+        this.cost = defence;
+        this.type = hability;
         this.description = description
     }
 
@@ -182,27 +182,27 @@ class MatchDecks {
 
                 let pCard = dbplayercards[pos];
                 let oCard = dboppcards[pos];
+                let damage = 0;
                 
                 if (pCard.ugc_id && oCard.ugc_id) {
-                    if (pCard.attack > oCard.attack) {
-                        damage = pCard.attack - oCard.attack;
-                        player.hp = player.hp - damage
-                    } else if (pCard.attack < oCard.attack) {
-                        damage = oCard.attack - pCard.attack;
-                        player.hp = player.hp - damage
-                    } else {
-                        (pCard.attack = oCard.attack)
-                        return { status: 400, result: { msg: "Damage is the same, no damage dealt to the player" } };
-                    }
+                    if (pCard.crd_atk > oCard.crd_atk) {
+                        damage = pCard.crd_atk - oCard.crd_atk;
+                        game.player.hp = game.player.hp - damage
+                        await pool.query ('UPDATE user_game SET ug_hp = 5000 WHERE ug_id = 1', [game.player.id]);
+
+                    } else if (pCard.crd_atk < oCard.crd_atk) {
+                        damage = oCard.crd_atk - pCard.crd_atk;
+                        game.player.hp = game.player.hp - damage
+                        await pool.query ('UPDATE user_game SET ug_hp = 5000 WHERE ug_id = 1', [game.player.id]);
+                    } 
                 } else if (pCard.ugc_id == null) {
-                    player.hp = player.hp - oCard.attack
-                    return {status:400, result: {msg: "No cards at the player board, damage dealth to player"}};
+                    game.player.hp = game.player.hp - oCard.crd_atk
+                    await pool.query ('UPDATE user_game SET ug_hp = 5000 WHERE ug_id = 1', [game.player.id]);    
+
                 } else if (oCard.ugc_id == null) {
-                    player.hp = player.hp - pCard.attack
-                    return {status:400, result: {msg: "No cards at the opponent board, damage dealth to opponent"}};
-                } else {
-                    (pCard.ugc_id == null && oCard.ugc_id == null)
-                }
+                    game.player.hp = game.player.hp - pCard.crd_atk
+                    await pool.query ('UPDATE user_game SET ug_hp = 5000 WHERE ug_id = 1', [game.player.id]);
+                } 
             }
 
             //await pool.query(`DELETE FROM user_game_card WHERE ugc_crd_id = ?`, [cardId]);
