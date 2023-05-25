@@ -1,6 +1,6 @@
 class Card {
-    static width = 100;
-    static height = 150;
+    static width = 84;
+    static height = 130;
     constructor(card,x,y,img) {
         this.card = card;
         this.x = x;
@@ -60,7 +60,7 @@ class Deck {
         let x = this.x;
         for (let cardInfo of cardsInfo) {
             cards.push(new Card(cardInfo, x, this.y+Deck.titleHeight, this.cardImg));
-            x += Card.width;
+            x += Card.width + 15;
         }
         return cards;
     }

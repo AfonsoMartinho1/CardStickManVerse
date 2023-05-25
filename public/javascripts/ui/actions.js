@@ -30,15 +30,15 @@ async function getDecksInfo() {
             GameInfo.playerDeck = new Deck(
                 " ",
                 GameInfo.matchDecks.mycards,
-                GameInfo.width/2-200,
-                GameInfo.height/2+150,
+                GameInfo.width/2-339,
+                GameInfo.height/2+175,
                 playCard,
                 GameInfo.images.card
             );
         }
         if (GameInfo.oppDeck) GameInfo.oppDeck.update(GameInfo.matchDecks.oppcards); 
         else GameInfo.oppDeck = new Deck(" ",
-            GameInfo.matchDecks.oppcards,GameInfo.width/2-200,GameInfo.height/2-400,null,GameInfo.images.card);
+            GameInfo.matchDecks.oppcards,GameInfo.width/2-339,GameInfo.height/2-404,null,GameInfo.images.card);
     }
 }
 
@@ -52,10 +52,10 @@ async function getBoardInfo() {
         console.log(GameInfo.matchBoard.mycards);
         if (GameInfo.playerBoard) GameInfo.playerBoard.update(GameInfo.matchBoard.mycards); 
         else GameInfo.playerBoard = new Deck(" ",
-            GameInfo.matchBoard.mycards,GameInfo.width/2-200,GameInfo.height/2-40,playCard,GameInfo.images.card);
+            GameInfo.matchBoard.mycards,GameInfo.width/2-141,GameInfo.height/2-7,playCard,GameInfo.images.card);
         if (GameInfo.oppBoard) GameInfo.oppBoard.update(GameInfo.matchBoard.oppcards); 
         else GameInfo.oppBoard = new Deck(" ",
-            GameInfo.matchBoard.oppcards,GameInfo.width/2-200,GameInfo.height/2-200,null,GameInfo.images.card);
+            GameInfo.matchBoard.oppcards,GameInfo.width/2-143,GameInfo.height/2-207,null,GameInfo.images.card);
     }
 }
 

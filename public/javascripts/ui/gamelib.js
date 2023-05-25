@@ -17,6 +17,7 @@ async function refresh() {
 
 function preload() {
     GameInfo.images.card = loadImage('/assets/Playing-Card-PNG-Image.png');
+    GameInfo.images.board = loadImage('/assets/boardv3.png');
 }
 
 
@@ -31,7 +32,7 @@ async function setup() {
     //buttons (create a separated function if they are many)
     GameInfo.endturnButton = createButton('End Turn');
     GameInfo.endturnButton.parent('game');
-    GameInfo.endturnButton.position(GameInfo.width-150,GameInfo.height-50);
+    GameInfo.endturnButton.position(GameInfo.width-125,GameInfo.height-700);
     GameInfo.endturnButton.mousePressed(endturnAction);
     GameInfo.endturnButton.addClass('game')
 
@@ -45,7 +46,7 @@ async function setup() {
 }
 
 function draw() {
-    background(220);
+    background(GameInfo.images.board);
     if (GameInfo.loading) {
         textAlign(CENTER, CENTER);
         textSize(40);

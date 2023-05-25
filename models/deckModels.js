@@ -214,7 +214,22 @@ class MatchDecks {
             return { status: 500, result: err };
         }
     }
+
+    static async bonusCardEveryTurn (game) {
+        await pool.query('SELECT * FROM card INNER JOIN user_game_card ON ugc_crd_id = crd_id WHERE (ugc_pos_id = 1)');
+        
+        //add 1 card every 2 turns
+        await pool.query(`UPDATE user_game_card SET ugc_pos_id = ? WHERE ugc_id = ?`, [game]);
+    }
 }
+
+//function angelAbility (cardId, playerId) {
+        //if (cardId = 3) and (playerId = 1) {
+            //game.player.hp = game.player.hp + 500;
+        //}
+//}
+        
+
 
 
 module.exports = MatchDecks;
