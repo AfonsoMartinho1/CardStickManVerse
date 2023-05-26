@@ -61,7 +61,7 @@ class Play {
                 [game.id]);
 
                 await MatchDecks.combatHandler(game)
-                await MatchDecks.bonusCardEveryTurn(game)
+                //await MatchDecks.bonusCardEveryTurn(game)
             }
 
             return { status: 200, result: { msg: "Your turn ended." } };

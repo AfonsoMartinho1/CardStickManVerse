@@ -167,60 +167,58 @@ class MatchDecks {
 
     static async combatHandler(game) {
         try {
-            let sql = `Select * from card_position
-            left join user_game_card on ugc_pos_id = pos_id
-            left join card on ugc_crd_id = crd_id
-            where (pos_id = 3 or pos_id = 4 or pos_id = 5) and (ugc_user_game_id = ? or ugc_user_game_id IS NULL)  order by pos_id `;
-
-
-            let [dbplayercards] = await pool.query(sql,
-                [game.player.id]);
-            let [dboppcards] = await pool.query(sql,
-                [game.opponents[0].id]);
-
-            for (let pos = 0; pos < 3; pos ++) {
-
-                let pCard = dbplayercards[pos];
-                let oCard = dboppcards[pos];
-                let damage = 0;
-                
-                if (pCard.ugc_id && oCard.ugc_id) {
-                    if (pCard.crd_atk > oCard.crd_atk) {
-                        damage = pCard.crd_atk - oCard.crd_atk;
-                        game.player.hp = game.player.hp - damage
-                        await pool.query ('UPDATE user_game SET ug_hp = 5000 WHERE ug_id = 1', [game.player.id]);
-
-                    } else if (pCard.crd_atk < oCard.crd_atk) {
-                        damage = oCard.crd_atk - pCard.crd_atk;
-                        game.player.hp = game.player.hp - damage
-                        await pool.query ('UPDATE user_game SET ug_hp = 5000 WHERE ug_id = 1', [game.player.id]);
-                    } 
-                } else if (pCard.ugc_id == null) {
-                    game.player.hp = game.player.hp - oCard.crd_atk
-                    await pool.query ('UPDATE user_game SET ug_hp = 5000 WHERE ug_id = 1', [game.player.id]);    
-
-                } else if (oCard.ugc_id == null) {
-                    game.player.hp = game.player.hp - pCard.crd_atk
-                    await pool.query ('UPDATE user_game SET ug_hp = 5000 WHERE ug_id = 1', [game.player.id]);
-                } 
+          let sql = `
+            SELECT *
+            FROM card_position
+            LEFT JOIN user_game_card ON ugc_pos_id = pos_id
+            LEFT JOIN card ON ugc_crd_id = crd_id
+            WHERE (pos_id = 3 OR pos_id = 4 OR pos_id = 5) AND (ugc_user_game_id = ? OR ugc_user_game_id IS NULL)
+            ORDER BY pos_id
+          `;
+      
+          let [dbplayercards] = await pool.query(sql, [game.player.id]);
+          let [dboppcards] = await pool.query(sql, [game.opponents[0].id]);
+      
+          for (let pos = 0; pos < 3; pos++) {
+            let pCard = dbplayercards[pos];
+            let oCard = dboppcards[pos];
+      
+            if (pCard && oCard && pCard.ugc_id && oCard.ugc_id) {
+              if (pCard.crd_atk > oCard.crd_atk) {
+                let damage = pCard.crd_atk - oCard.crd_atk;
+                game.opponents[0].hp -= damage;
+                await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.opponents[0].hp, game.opponents[0].id]);
+              } else if (pCard.crd_atk < oCard.crd_atk) {
+                let damage = oCard.crd_atk - pCard.crd_atk;
+                game.player.hp -= damage;
+                await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.player.hp, game.player.id]);
+              }
+            } else if (pCard && !pCard.ugc_id) {
+              let damage = oCard ? oCard.crd_atk : 0; // Handle case when oCard is null
+              game.player.hp -= damage;
+              await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.player.hp, game.player.id]);
+            } else if (oCard && !oCard.ugc_id) {
+              let damage = pCard ? pCard.crd_atk : 0; // Handle case when pCard is null
+              game.opponents[0].hp -= damage;
+              await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.opponents[0].hp, game.opponents[0].id]);
             }
-
-            //await pool.query(`DELETE FROM user_game_card WHERE ugc_crd_id = ?`, [cardId]);
-            await pool.query(`UPDATE user_game_card SET ugc_pos_id = ? WHERE ugc_id = ?`, [position]);
-
-            return { status: 200, result: new MatchDecks(playerCards, oppCards) };
+          }
+      
+          return { status: 200, result: new MatchDecks(dbplayercards, dboppcards) };
         } catch (err) {
-            console.log(err);
-            return { status: 500, result: err };
+          console.log(err);
+          return { status: 500, result: err };
         }
-    }
+      }
+      
+      
 
-    static async bonusCardEveryTurn (game) {
-        await pool.query('SELECT * FROM card INNER JOIN user_game_card ON ugc_crd_id = crd_id WHERE (ugc_pos_id = 1)');
+    //static async bonusCardEveryTurn (game) {
+       // await pool.query('SELECT * FROM card INNER JOIN user_game_card ON ugc_crd_id = crd_id WHERE (ugc_pos_id = 1)');
         
         //add 1 card every 2 turns
-        await pool.query(`UPDATE user_game_card SET ugc_pos_id = ? WHERE ugc_id = ?`, [game]);
-    }
+       // await pool.query(`UPDATE user_game_card SET ugc_pos_id = ? WHERE ugc_id = ?`, [game.player.id]);
+    //}
 }
 
 //function angelAbility (cardId, playerId) {
