@@ -69,6 +69,7 @@ async function playCard(card) {
     if (result.successful) {
       await getGameInfo();
       await getDecksInfo();
+      await getBoardInfo();
     } else {
       alert(result.err);
     }

@@ -1,4 +1,3 @@
-
 async function refresh() {
     if (GameInfo.game.player.state == "Waiting") { 
         // Every time we are waiting
@@ -9,6 +8,8 @@ async function refresh() {
             // The moment we pass from waiting to play
             GameInfo.prepareUI();
             await playCard();
+            await getBoardInfo();
+            await combatHandler();
         }
     } 
     // Nothing to do when we are playing since we control all that happens 

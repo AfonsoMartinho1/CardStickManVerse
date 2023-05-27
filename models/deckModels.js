@@ -183,25 +183,30 @@ class MatchDecks {
             let pCard = dbplayercards[pos];
             let oCard = dboppcards[pos];
       
-            if (pCard && oCard && pCard.ugc_id && oCard.ugc_id) {
-              if (pCard.crd_atk > oCard.crd_atk) {
-                let damage = pCard.crd_atk - oCard.crd_atk;
-                game.opponents[0].hp -= damage;
-                await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.opponents[0].hp, game.opponents[0].id]);
-              } else if (pCard.crd_atk < oCard.crd_atk) {
-                let damage = oCard.crd_atk - pCard.crd_atk;
+            if (pCard && pCard.ugc_id !== null && oCard && oCard.ugc_id !== null) {
+                if (pCard.crd_atk > oCard.crd_atk) {
+                    let damage = pCard.crd_atk - oCard.crd_atk;
+                    game.opponents[0].hp -= damage;
+                    await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.opponents[0].hp, game.opponents[0].id]);
+                    await pool.query('UPDATE user_game_card SET ugc_pos_id = 1 WHERE ugc_id = ?', [oCard.ugc_id]);
+                } else if (pCard.crd_atk < oCard.crd_atk) {
+                    let damage = oCard.crd_atk - pCard.crd_atk;
+                    game.player.hp -= damage;
+                    await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.player.hp, game.player.id]);
+                    await pool.query('UPDATE user_game_card SET ugc_pos_id = 1 WHERE ugc_id = ?', [pCard.ugc_id]);
+                } else {
+                    // Handle tie case (if needed)
+                }
+            } else if (oCard && oCard.ugc_id !== null && !pCard) {
+                let damage = oCard.crd_atk;
                 game.player.hp -= damage;
                 await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.player.hp, game.player.id]);
-              }
-            } else if (pCard && !pCard.ugc_id) {
-              let damage = oCard ? oCard.crd_atk : 0; // Handle case when oCard is null
-              game.player.hp -= damage;
-              await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.player.hp, game.player.id]);
-            } else if (oCard && !oCard.ugc_id) {
-              let damage = pCard ? pCard.crd_atk : 0; // Handle case when pCard is null
-              game.opponents[0].hp -= damage;
-              await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.opponents[0].hp, game.opponents[0].id]);
+            } else if (pCard && pCard.ugc_id !== null && !oCard) {
+                let damage = pCard.crd_atk;
+                game.opponents[0].hp -= damage;
+                await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.opponents[0].hp, game.opponents[0].id]);
             }
+            
           }
       
           return { status: 200, result: new MatchDecks(dbplayercards, dboppcards) };
@@ -210,6 +215,7 @@ class MatchDecks {
           return { status: 500, result: err };
         }
       }
+      
       
       
 
