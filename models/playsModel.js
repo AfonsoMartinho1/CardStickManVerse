@@ -55,6 +55,8 @@ class Play {
           
             await MatchDecks.genPlayerDeck(game.opponents[0].id);
 
+            await MatchDecks.giveRandomCard(game)
+
             if (game.player.order == 2) {
                 // Increase the number of turns.
                 await pool.query(`Update game set gm_turn=gm_turn+1 where gm_id = ?`,

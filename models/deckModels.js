@@ -103,6 +103,7 @@ class MatchDecks {
             let oppCards = [];
             for (let dbcard of dbcards) {
                 let card = fromDBCardToCard(dbcard);
+                card.position = dbcard.ugc_pos_id -2;
                 if (dbcard.ugc_user_game_id == game.player.id) {
                     playerCards.push(card);
                 } else {
@@ -179,35 +180,45 @@ class MatchDecks {
           let [dbplayercards] = await pool.query(sql, [game.player.id]);
           let [dboppcards] = await pool.query(sql, [game.opponents[0].id]);
       
+          //const playerAngelCard = dbplayercards.find(card => card.crd_name === "Angel");
+          //const opponentAngelCard = dboppcards.find(card => card.crd_name === "Angel");
+      
           for (let pos = 0; pos < 3; pos++) {
             let pCard = dbplayercards[pos];
             let oCard = dboppcards[pos];
       
             if (pCard && pCard.ugc_id !== null && oCard && oCard.ugc_id !== null) {
-                if (pCard.crd_atk > oCard.crd_atk) {
-                    let damage = pCard.crd_atk - oCard.crd_atk;
-                    game.opponents[0].hp -= damage;
-                    await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.opponents[0].hp, game.opponents[0].id]);
-                    await pool.query('UPDATE user_game_card SET ugc_pos_id = 1 WHERE ugc_id = ?', [oCard.ugc_id]);
-                } else if (pCard.crd_atk < oCard.crd_atk) {
-                    let damage = oCard.crd_atk - pCard.crd_atk;
-                    game.player.hp -= damage;
-                    await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.player.hp, game.player.id]);
-                    await pool.query('UPDATE user_game_card SET ugc_pos_id = 1 WHERE ugc_id = ?', [pCard.ugc_id]);
-                } else {
-                    // Handle tie case (if needed)
-                }
-            } else if (oCard && oCard.ugc_id !== null && !pCard) {
-                let damage = oCard.crd_atk;
-                game.player.hp -= damage;
-                await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.player.hp, game.player.id]);
-            } else if (pCard && pCard.ugc_id !== null && !oCard) {
-                let damage = pCard.crd_atk;
+              if (pCard.crd_atk > oCard.crd_atk) {
+                let damage = pCard.crd_atk - oCard.crd_atk;
                 game.opponents[0].hp -= damage;
                 await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.opponents[0].hp, game.opponents[0].id]);
+                await pool.query('UPDATE user_game_card SET ugc_pos_id = 6 WHERE ugc_id = ?', [oCard.ugc_id]);
+              } else if (pCard.crd_atk < oCard.crd_atk) {
+                let damage = oCard.crd_atk - pCard.crd_atk;
+                game.player.hp -= damage;
+                await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.player.hp, game.player.id]);
+                await pool.query('UPDATE user_game_card SET ugc_pos_id = 6 WHERE ugc_id = ?', [pCard.ugc_id]);
+              } else {
+                // Handle tie case (if needed)
+              }
+            } else if (oCard && oCard.ugc_id !== null && !pCard) {
+              let damage = oCard.crd_atk;
+              game.player.hp -= damage;
+              await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.player.hp, game.player.id]);
+            } else if (pCard && pCard.ugc_id !== null && !oCard) {
+              let damage = pCard.crd_atk;
+              game.opponents[0].hp -= damage;
+              await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.opponents[0].hp, game.opponents[0].id]);
             }
-            
           }
+      
+          //if (playerAngelCard && game.turn === 1) {
+           // healMissingHealth(game.player.id);
+          //}
+      
+          //if (opponentAngelCard && game.turn === 1) {
+           // healMissingHealth(game.opponents[0].id);
+          //}
       
           return { status: 200, result: new MatchDecks(dbplayercards, dboppcards) };
         } catch (err) {
@@ -215,24 +226,49 @@ class MatchDecks {
           return { status: 500, result: err };
         }
       }
-      
-      
-      
 
-    //static async bonusCardEveryTurn (game) {
-       // await pool.query('SELECT * FROM card INNER JOIN user_game_card ON ugc_crd_id = crd_id WHERE (ugc_pos_id = 1)');
-        
-        //add 1 card every 2 turns
-       // await pool.query(`UPDATE user_game_card SET ugc_pos_id = ? WHERE ugc_id = ?`, [game.player.id]);
-    //}
+      static async giveRandomCard(game) {
+        try {
+          // Retrieve the list of cards from the database
+          const [dbPlayerCards] = await pool.query('SELECT * FROM user_game_card WHERE ugc_pos_id = 1 ORDER BY ugc_crd_id');
+      
+          if (dbPlayerCards.length === 0) {
+            throw new Error('No cards found in position 1 (deck).');
+          }
+      
+          // Generate a random index within the range of available cards
+          const randomIndex = Math.floor(Math.random() * dbPlayerCards.length);
+      
+          // Retrieve the selected card
+          const selectedCard = dbPlayerCards[randomIndex];
+      
+          // Assign the selected card ID to the player
+          game.player.crd_id = selectedCard.card_id;
+      
+          // Create a MatchDecks object with updated player cards
+          const updatedDecks = new MatchDecks(dbPlayerCards, game.opponents[0].cards);
+      
+          // Update the card's position in the database
+          await pool.query('UPDATE user_game_card SET ugc_pos_id = 2 WHERE ugc_id = ?', [selectedCard.ugc_id]);
+      
+          // Return the MatchDecks object
+          return updatedDecks;
+        } catch (err) {
+          console.log(err);
+          throw err;
+        }
+      }
+
+      
 }
 
-//function angelAbility (cardId, playerId) {
-        //if (cardId = 3) and (playerId = 1) {
-            //game.player.hp = game.player.hp + 500;
-        //}
+//function healMissingHealth(game) {
+    //const missingHealth = 5000 - game.player.hp;
+    //const healAmount = Math.round(missingHealth * 0.2); // 20% of missing health
+    //game.player.hp += healAmount;
 //}
-        
+
+
 
 
 

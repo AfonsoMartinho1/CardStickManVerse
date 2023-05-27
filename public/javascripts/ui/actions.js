@@ -68,8 +68,8 @@ async function playCard(card) {
     console.log(result);
     if (result.successful) {
       await getGameInfo();
-      await getDecksInfo();
-      await getBoardInfo();
+      await getDecksInfo();~
+      await getBoardInfo()
     } else {
       alert(result.err);
     }
