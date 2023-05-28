@@ -199,7 +199,9 @@ class MatchDecks {
                 await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.player.hp, game.player.id]);
                 await pool.query('UPDATE user_game_card SET ugc_pos_id = 6 WHERE ugc_id = ?', [pCard.ugc_id]);
               } else {
-                // Handle tie case (if needed)
+                pCard.crd_atk = oCard.crd_atk
+                await pool.query('UPDATE user_game_card SET ugc_pos_id = 6 WHERE ugc_id = ?', [pCard.ugc_id]);
+                await pool.query('UPDATE user_game_card SET ugc_pos_id = 6 WHERE ugc_id = ?', [oCard.ugc_id]);
               }
             } else if (oCard && oCard.ugc_id !== null && !pCard) {
               let damage = oCard.crd_atk;
@@ -211,6 +213,7 @@ class MatchDecks {
               await pool.query('UPDATE user_game SET ug_hp = ? WHERE ug_id = ?', [game.opponents[0].hp, game.opponents[0].id]);
             }
           }
+          
       
           //if (playerAngelCard && game.turn === 1) {
            // healMissingHealth(game.player.id);
@@ -229,30 +232,49 @@ class MatchDecks {
 
       static async giveRandomCard(game) {
         try {
-          // Retrieve the list of cards from the database
-          const [dbPlayerCards] = await pool.query('SELECT * FROM user_game_card WHERE ugc_pos_id = 1 ORDER BY ugc_crd_id');
+          const [dbPlayerCards] = await pool.query('SELECT * FROM user_game_card WHERE ugc_pos_id = 1 AND ugc_user_game_id = 1');
+          const [dbPlayerCards2] = await pool.query('SELECT * FROM user_game_card WHERE ugc_pos_id = 1 AND ugc_user_game_id = 1');
+          const [dbOpponentCards] = await pool.query('SELECT * FROM user_game_card WHERE ugc_pos_id = 1 AND ugc_user_game_id = 2');
+          const [dbOpponentCards2] = await pool.query('SELECT * FROM user_game_card WHERE ugc_pos_id = 1 AND ugc_user_game_id = 2');
       
           if (dbPlayerCards.length === 0) {
-            throw new Error('No cards found in position 1 (deck).');
+            throw new Error('No cards found in position 1 (player deck).');
+          }
+          if (dbPlayerCards2.length === 0) {
+            throw new Error('No cards found in position 1 (player deck).');
+          }
+          if (dbOpponentCards.length === 0) {
+            throw new Error('No cards found in position 1 (opponent deck).');
+          }
+          if (dbOpponentCards2.length === 0) {
+            throw new Error('No cards found in position 1 (opponent deck).');
           }
       
-          // Generate a random index within the range of available cards
           const randomIndex = Math.floor(Math.random() * dbPlayerCards.length);
+          const randomIndex3 = Math.floor(Math.random() * dbPlayerCards2.length);
+          const randomIndex2 = Math.floor(Math.random() * dbOpponentCards.length);
+          const randomIndex4 = Math.floor(Math.random() * dbOpponentCards2.length);
       
-          // Retrieve the selected card
           const selectedCard = dbPlayerCards[randomIndex];
+          const selectedCard3 = dbPlayerCards2[randomIndex3];
+          const selectedCard2 = dbOpponentCards[randomIndex2];
+          const selectedCard4 = dbOpponentCards2[randomIndex4];
       
-          // Assign the selected card ID to the player
           game.player.crd_id = selectedCard.card_id;
+          game.player.crd_id = selectedCard3.card_id;
+          game.opponents.crd_id = selectedCard2.card_id;
+          game.opponents.crd_id = selectedCard4.card_id;
       
-          // Create a MatchDecks object with updated player cards
-          const updatedDecks = new MatchDecks(dbPlayerCards, game.opponents[0].cards);
+          const updatedDecks = new MatchDecks(dbPlayerCards, dbOpponentCards);
+          const updatedDecks2 = new MatchDecks(dbPlayerCards2, dbOpponentCards2);
+
       
-          // Update the card's position in the database
           await pool.query('UPDATE user_game_card SET ugc_pos_id = 2 WHERE ugc_id = ?', [selectedCard.ugc_id]);
+          await pool.query('UPDATE user_game_card SET ugc_pos_id = 2 WHERE ugc_id = ?', [selectedCard2.ugc_id]);
+          await pool.query('UPDATE user_game_card SET ugc_pos_id = 2 WHERE ugc_id = ?', [selectedCard3.ugc_id]);
+          await pool.query('UPDATE user_game_card SET ugc_pos_id = 2 WHERE ugc_id = ?', [selectedCard4.ugc_id]);
       
-          // Return the MatchDecks object
-          return updatedDecks;
+          return { updatedDecks, updatedDecks2 };
         } catch (err) {
           console.log(err);
           throw err;
@@ -261,15 +283,5 @@ class MatchDecks {
 
       
 }
-
-//function healMissingHealth(game) {
-    //const missingHealth = 5000 - game.player.hp;
-    //const healAmount = Math.round(missingHealth * 0.2); // 20% of missing health
-    //game.player.hp += healAmount;
-//}
-
-
-
-
 
 module.exports = MatchDecks;

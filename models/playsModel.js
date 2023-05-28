@@ -55,7 +55,6 @@ class Play {
           
             await MatchDecks.genPlayerDeck(game.opponents[0].id);
 
-            await MatchDecks.giveRandomCard(game)
 
             if (game.player.order == 2) {
                 // Increase the number of turns.
@@ -63,6 +62,8 @@ class Play {
                 [game.id]);
 
                 await MatchDecks.combatHandler(game)
+                await MatchDecks.giveRandomCard(game)
+                
                 //await MatchDecks.bonusCardEveryTurn(game)
             }
 

@@ -60,21 +60,30 @@ async function getBoardInfo() {
 }
 
 async function playCard(card) {
-    console.log(Object.keys(card));
-    let position = parseInt(prompt("What position would you like to place the card? 1, 2 or 3?"));
-    
-    //if (confirm(`Do you want to play the "${card.name}" card?`)) {
-    let result = await requestPlayCard(card.deckId, position);
-    console.log(result);
-    if (result.successful) {
-      await getGameInfo();
-      await getDecksInfo();~
-      await getBoardInfo()
+    let position = parseInt(prompt("What position would you like to place the card? 1, 2, or 3?"));
+  
+    if (isPlayerTurn()) {
+      //if (confirm(`Do you want to play the "${card.name}" card?`)) {
+      let result = await requestPlayCard(card.deckId, position);
+      console.log(result);
+      if (result.successful) {
+        await getGameInfo();
+        await getDecksInfo();
+        await getBoardInfo();
+      } else {
+        alert(result.err);
+      }
     } else {
-      alert(result.err);
+      alert("It's not your turn to play a card.");
     }
- // }
-}
+  }
+  
+  function isPlayerTurn() {
+    // Assuming you have a variable `currentPlayer` that represents the current turn player
+    return isPlayerTurn === "player";
+  }
+  
+
 
 async function promptCardPosition() {
      let successful;

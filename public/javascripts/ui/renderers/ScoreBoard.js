@@ -16,7 +16,8 @@ class ScoreBoard {
         textAlign(LEFT,CENTER);
         textSize(16);
         textStyle(NORMAL);
-        text("Player HP: "+this.game.player.hp,ScoreBoard.x+5,ScoreBoard.y+15)
+        text("Player HP: "+this.game.player.hp,ScoreBoard.x+1210,ScoreBoard.y+700)
+        text("Opp HP: "+this.game.opponents[0].hp,ScoreBoard.x+5,ScoreBoard.y+18)
         text("Turn: "+this.game.turn,ScoreBoard.x+5,ScoreBoard.y+45)
         if (this.game.state == "Finished"){ 
             fill(200,0,0);
