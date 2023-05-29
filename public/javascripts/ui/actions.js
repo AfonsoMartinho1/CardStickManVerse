@@ -33,12 +33,12 @@ async function getDecksInfo() {
                 GameInfo.width/2-339,
                 GameInfo.height/2+175,
                 playCard,
-                GameInfo.images.card
+                GameInfo.images.playercard
             );
         }
         if (GameInfo.oppDeck) GameInfo.oppDeck.update(GameInfo.matchDecks.oppcards); 
         else GameInfo.oppDeck = new Deck(" ",
-            GameInfo.matchDecks.oppcards,GameInfo.width/2-339,GameInfo.height/2-404,null,GameInfo.images.card);
+            GameInfo.matchDecks.oppcards,GameInfo.width/2-339,GameInfo.height/2-404,null,GameInfo.images.opponentcard);
     }
 }
 
@@ -52,13 +52,12 @@ async function getBoardInfo() {
         console.log(GameInfo.matchBoard.mycards);
         if (GameInfo.playerBoard) GameInfo.playerBoard.update(GameInfo.matchBoard.mycards); 
         else GameInfo.playerBoard = new Deck(" ",
-            GameInfo.matchBoard.mycards,GameInfo.width/2-141,GameInfo.height/2-7,playCard,GameInfo.images.card);
+            GameInfo.matchBoard.mycards,GameInfo.width/2-141,GameInfo.height/2-7,playCard,GameInfo.images.playercard);
         if (GameInfo.oppBoard) GameInfo.oppBoard.update(GameInfo.matchBoard.oppcards); 
         else GameInfo.oppBoard = new Deck(" ",
-            GameInfo.matchBoard.oppcards,GameInfo.width/2-143,GameInfo.height/2-207,null,GameInfo.images.card);
+            GameInfo.matchBoard.oppcards,GameInfo.width/2-143,GameInfo.height/2-207,null,GameInfo.images.playercard);
     }
 }
-
 async function playCard(card) {
     console.log(Object.keys(card));
     let position = parseInt(prompt("What position would you like to place the card? 1, 2, or 3?"));

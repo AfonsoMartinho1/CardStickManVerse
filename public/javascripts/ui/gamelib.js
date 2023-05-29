@@ -17,8 +17,9 @@ async function refresh() {
 }
 
 function preload() {
-    GameInfo.images.card = loadImage('/assets/Playing-Card-PNG-Image.png');
-    GameInfo.images.board = loadImage('/assets/boardv3.png');
+  GameInfo.images.playercard = loadImage('/assets/cardstickman.png');
+  GameInfo.images.opponentcard = loadImage('/assets/cardstickman180degrees.png');
+  GameInfo.images.board = loadImage('/assets/boardv3.png');
 }
 
 

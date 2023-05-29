@@ -12,7 +12,7 @@ class Card {
   }
 
   draw() {
-    if (!this.card.active) tint(250, 100, 100);
+    if (!this.card.active);
     image(this.img, this.x, this.y, Card.width, Card.height);
 
     textAlign(CENTER, CENTER);
@@ -21,29 +21,17 @@ class Card {
     textSize(18);
     stroke(0);
     strokeWeight(2);
-    text(this.card.cost, this.x + Card.width * 0.905 - 6, this.y + Card.height * 0.065);
+    //text(this.card.cost, this.x + Card.width * 0.905 - 6, this.y + Card.height * 0.065);
     strokeWeight(1);
     noStroke();
     fill(0);
     textSize(16);
-    text(this.card.name, this.x + Card.width * 0.5, this.y + Card.height * 0.63);
+    text(this.card.name, this.x + Card.width * 0.5, this.y + Card.height * 0.60);
     textSize(12);
     textAlign(CENTER, TOP);
-    text(
-      this.card.attack,
-      this.x + Card.width * 0.1,
-      this.y + Card.height * 0.68,
-      Card.width * 0.8,
-      Card.height * 0.1
-    );
+    text(this.card.attack,this.x + Card.width * 0.15,this.y + Card.height * 0.77,Card.width * 0.8,Card.height * 0.1);
     if (this.card.note) {
-      text(
-        this.card.note,
-        this.x + Card.width * 0.1,
-        this.y + Card.height * 0.8,
-        Card.width * 0.8,
-        Card.height * 0.15
-      );
+      text(this.card.note,this.x + Card.width * 0.1,this.y + Card.height * 0.8,Card.width * 0.8,Card.height * 0.15);
     }
     textStyle(NORMAL);
     noTint();
@@ -120,3 +108,6 @@ class Deck {
     }
   }
 }
+
+
+
