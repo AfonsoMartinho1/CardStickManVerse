@@ -28,7 +28,6 @@ main {
 }
 
 form,
-form input,
 form a {
   color: white !important;
 }
@@ -46,4 +45,9 @@ button.game {
   border-radius: 0;
   text-align: center;
   font-weight: bold;
+}
+
+#name,
+#password {
+  color: black;
 }

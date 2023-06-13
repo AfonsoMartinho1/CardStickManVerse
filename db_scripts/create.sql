@@ -1,4 +1,3 @@
-create database stickmanverse
 
 use stickmanverse;
 
