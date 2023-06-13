@@ -69,13 +69,29 @@ class Deck {
     let cards = [];
     let x = this.x;
     let position = 1;
+    let hasPositionProperty = cardsInfo.every(cardInfo => cardInfo.hasOwnProperty('position'));
+  
     for (let cardInfo of cardsInfo) {
+      if (hasPositionProperty) {
+        let adjustedPosition = cardInfo.position - 1;
+        let offsetX = adjustedPosition * (Card.width + 15);
+        x = this.x + offsetX;
+      }
+  
       cards.push(new Card(cardInfo, x, this.y + Deck.titleHeight, this.cardImg, position));
-      x += Card.width + 15;
+  
+      if (!hasPositionProperty) {
+        x += Card.width + 15;
+      }
+  
       position++;
     }
+  
     return cards;
   }
+  
+  
+  
 
   update(cardsInfo) {
     for (let card of this.cards) {

@@ -1,33 +1,35 @@
 body {
-    margin: 0px;
-    padding: 5px;
-    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-    display:flex;
-    flex-direction: column;
-    align-items: center;
+  margin: 0;
+  padding: 5px;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: black;
+  color: white;
 }
 
 main {
-    margin:auto;
-    display:inline;
+  margin: auto;
+  display: inline;
 }
 
-/* Game CSS*/
+/* Game CSS */
 #game {
-    position: relative;
-  }
-  
-  button.game {
-    font-size: 1.5em;
-    background-color: rgb(100,100,200);
-    color: white;
-    border: 1px solid rgba(27, 31, 35, .15);
-    border-radius: 0px;
-    text-align: center;
-    font-weight: bold;
-  }
+  position: relative;
+}
+
+button.game {
+  font-size: 1.5em;
+  background-color: rgb(100, 100, 200);
+  color: white;
+  border: 1px solid rgba(27, 31, 35, 0.15);
+  border-radius: 0;
+  text-align: center;
+  font-weight: bold;
+}
 
 .container {
   width: 100%;
-  height:100%;
+  height: 100%;
 }

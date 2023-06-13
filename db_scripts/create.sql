@@ -1,4 +1,4 @@
-create database stickmanverse;
+create database stickmanverse
 
 use stickmanverse;
 

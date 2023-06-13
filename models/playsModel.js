@@ -2,11 +2,14 @@ const pool = require("../config/database");
 const MatchDecks = require("./deckModels");
 const Settings = require("../models/gameSettings");
 
+async function checkEndGame(game) {
+    return game.player.hp <= 0 || game.opponents[0].hp <= 0
+  }
+
 class Play {
     // At this moment I do not need to store information so we have no constructor
 
     // Just a to have a way to determine end of game
-    static maxNumberTurns = 10;
 
 
     // we consider all verifications were made
@@ -48,23 +51,22 @@ class Play {
             // Change opponent state to playing (2)
             await pool.query(`Update user_game set ug_state_id=? where ug_id = ?`,
                 [2, game.opponents[0].id]);
-            // Increase the number of turns.
-            await pool.query(`Update game set gm_turn=gm_turn+1 where gm_id = ?`,
-            [game.id]);
-            // removes the cards of the player that ended and get new cards to the one that will start
           
-            await MatchDecks.genPlayerDeck(game.opponents[0].id);
-
 
             if (game.player.order == 2) {
-                // Increase the number of turns.
-                await pool.query(`Update game set gm_turn=gm_turn+1 where gm_id = ?`,
-                [game.id]);
 
                 await MatchDecks.combatHandler(game)
                 await MatchDecks.giveRandomCard(game)
-                
-                //await MatchDecks.bonusCardEveryTurn(game)
+
+                if (await checkEndGame(game)) {
+                    return await Play.endGame(game);
+                } else {
+                    // Increase the number of turns and continue 
+                    await pool.query(`Update game set gm_turn=gm_turn+1 where gm_id = ?`,
+                        [game.id]);
+                    
+                }
+
             }
 
             return { status: 200, result: { msg: "Your turn ended." } };
@@ -75,6 +77,25 @@ class Play {
     }
 
 
+    static async endGame(game) {
+        try {
+            // Both players go to score phase (id = 3)
+            let sqlPlayer = `Update user_game set ug_state_id = ? where ug_id = ?`;
+            await pool.query(sqlPlayer, [3, game.player.id]);
+            await pool.query(sqlPlayer, [3, game.opponents[0].id]);
+            // Set game to finished (id = 3)
+            await pool.query(`Update game set gm_state_id=? where gm_id = ?`, [3, game.id]);
+
+            let sqlScore = `Insert into scoreboard (sb_user_game_id,sb_state_id,sb_points) values (?,?,?)`;
+            await pool.query(sqlScore, [game.player.id,1,1]);
+            await pool.query(sqlScore, [game.opponents[0].id,1,1]);
+
+            return { status: 200, result: { msg: "Game ended. Check scores." } };
+        } catch (err) {
+            console.log(err);
+            return { status: 500, result: err };
+        }
+    }
 
 }
 

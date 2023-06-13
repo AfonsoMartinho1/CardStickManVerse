@@ -1,27 +1,44 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
-
-a {
-  color: #00B7FF;
-}
-
-.warning {
-  color: darkred;
-  font-size: larger;
-}
-
-#matches {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-}
-
-#matches section {
-  background-color: crimson;
-  color: white;
-  margin: 5px;
+  margin: 0;
   padding: 5px;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+  color: white;
+  height: 100vh;
+}
+
+.container {
+  width: 80%;
+  height: auto;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: white;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Game CSS */
+#game {
+  position: relative;
+}
+
+button.game {
+  font-size: 1.5em;
+  background-color: rgb(100, 100, 200);
+  color: white;
+  border: 1px solid rgba(27, 31, 35, 0.15);
+  border-radius: 0;
+  text-align: center;
+  font-weight: bold;
 }
 

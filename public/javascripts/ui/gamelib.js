@@ -8,10 +8,9 @@ async function refresh() {
             // The moment we pass from waiting to play
             GameInfo.prepareUI();
             await playCard();
-            await getBoardInfo();
             await combatHandler();
         }
-    } 
+    }
     // Nothing to do when we are playing since we control all that happens 
     // so no update is needed from the server
 }
@@ -19,7 +18,7 @@ async function refresh() {
 function preload() {
   GameInfo.images.playercard = loadImage('/assets/cardstickman.png');
   GameInfo.images.opponentcard = loadImage('/assets/cardstickman180degrees.png');
-  GameInfo.images.board = loadImage('/assets/boardv3.png');
+  GameInfo.images.board = loadImage('/assets/boardv4.png');
 }
 
 
@@ -29,7 +28,7 @@ async function setup() {
     // preload  images
     
     await  getGameInfo();
-    setInterval(refresh,1000);
+    setInterval(refresh,500);
 
     //buttons (create a separated function if they are many)
     GameInfo.endturnButton = createButton('End Turn');

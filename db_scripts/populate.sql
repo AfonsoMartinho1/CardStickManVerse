@@ -1,17 +1,14 @@
-# Do not change the order or names of states 
-#(the code is assuming specific IDs and names)
-# You can add more in the end
+use stickmanverse;
+
 insert into game_state (gst_state) values ('Waiting');
 insert into game_state (gst_state) values ('Started');
 insert into game_state (gst_state) values ('Finished');
 insert into game_state (gst_state) values ('Canceled');
 
-# Do not change the order, but you can add more in the end
 insert into user_game_state (ugst_state) values ('Waiting');
 insert into user_game_state (ugst_state) values ('Playing');
 insert into user_game_state (ugst_state) values ('End');
 
-# Possible end game states
 insert into scoreboard_state (sbs_state) values ('Lost');
 insert into scoreboard_state (sbs_state) values ('Won');
 
@@ -44,7 +41,6 @@ INSERT INTO game VALUES (1,1,2);
 INSERT INTO user_game VALUES (1,1,1,1,2,5000),(2,2,2,1,1,5000);
 
 INSERT INTO user_game_card VALUES 
-# ------------ player 1 deck
    (1,1,1,1),
    (2,1,2,2),
    (3,1,3,1),
@@ -65,7 +61,6 @@ INSERT INTO user_game_card VALUES
    (18,1,18,1),
    (19,1,19,1),
    (20,1,20,1),
-# ------------ player 2 deck
    (21,2,1,1),
    (22,2,2,1),
    (23,2,3,1),
