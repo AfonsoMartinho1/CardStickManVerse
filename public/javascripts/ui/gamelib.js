@@ -19,6 +19,8 @@ function preload() {
   GameInfo.images.playercard = loadImage('/assets/cardstickman.png');
   GameInfo.images.opponentcard = loadImage('/assets/cardstickman180degrees.png');
   GameInfo.images.board = loadImage('/assets/boardv4.png');
+  GameInfo.images.losingImage = loadImage('/assets/lose.png')
+  GameInfo.images.winningImage = loadImage('/assets/win.png')
 }
 
 
@@ -47,37 +49,45 @@ async function setup() {
 }
 
 function draw() {
-    background(GameInfo.images.board);
-    if (GameInfo.loading) {
-        textAlign(CENTER, CENTER);
-        textSize(40);
-        fill('black');
-        text('Loading...', GameInfo.width/2, GameInfo.height/2);
-    } else if (GameInfo.game.state == "Finished" && GameInfo.scoreWindow) {
-        GameInfo.scoreWindow.draw();
-    } else  {
-        GameInfo.scoreBoard.draw();
-        if (GameInfo.playerDeck) {
-            GameInfo.playerDeck.draw();
-          }
-          if (GameInfo.oppDeck) {
-            GameInfo.oppDeck.draw();
-          }
-          if (GameInfo.playerBoard) {
-            GameInfo.playerBoard.draw();
-          }
-          if (GameInfo.oppBoard) {
-            GameInfo.oppBoard.draw();
-          }
-          if (GameInfo.playerPlay) {
-            GameInfo.playerPlay.draw();
-          }
-          if (GameInfo.oppPlay) {
-            GameInfo.oppPlay.draw();
-          }
-        
+
+  if (GameInfo.loading) {
+    textAlign(CENTER, CENTER);
+    textSize(40);
+    fill('black');
+    text('Loading...', GameInfo.width/2, GameInfo.height/2);
+  } else if (GameInfo.game.player.hp <= 0 || GameInfo.game.opponents[0].hp <= 0) {
+    if (GameInfo.game.player.hp <= 0) {
+      background(GameInfo.images.losingImage)
+    } else {
+      background(GameInfo.images.winningImage)
     }
+  } else {
+    background(GameInfo.images.board);
+    GameInfo.scoreBoard.draw();
+
+    if (GameInfo.playerDeck) {
+      GameInfo.playerDeck.draw();
+      GameInfo.playerDeck.mouseMoved();
+    }
+    if (GameInfo.oppDeck) {
+      GameInfo.oppDeck.draw();
+
+    }
+    if (GameInfo.playerBoard) {
+      GameInfo.playerBoard.draw();
+    }
+    if (GameInfo.oppBoard) {
+      GameInfo.oppBoard.draw();
+    }
+    if (GameInfo.playerPlay) {
+      GameInfo.playerPlay.draw();
+    }
+    if (GameInfo.oppPlay) {
+      GameInfo.oppPlay.draw();
+    }
+  }
 }
+
 
 async function mouseClicked() {
     if ( GameInfo.playerDeck) {

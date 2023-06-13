@@ -63,6 +63,7 @@ class Deck {
     this.clickAction = clickAction;
     this.cardImg = cardImg;
     this.cards = this.createCards(cardsInfo);
+    this.hoveredCard = null; // New property to store the hovered card
   }
 
   createCards(cardsInfo) {
@@ -89,9 +90,6 @@ class Deck {
   
     return cards;
   }
-  
-  
-  
 
   update(cardsInfo) {
     for (let card of this.cards) {
@@ -112,6 +110,14 @@ class Deck {
     for (let card of this.cards) {
       card.draw();
     }
+
+    if (this.hoveredCard) {
+      // Draw a highlight around the hovered card
+      stroke(181, 80, 0);
+      strokeWeight(2);
+      noFill();
+      rect(this.hoveredCard.x, this.hoveredCard.y, Card.width, Card.height);
+    }
   }
 
   click() {
@@ -123,7 +129,25 @@ class Deck {
       }
     }
   }
+
+  mouseMoved() {
+    // Check if the mouse is hovering over a card in the deck
+    let hoveringCard = null;
+  
+    for (let card of GameInfo.playerDeck.cards) {
+      if (card.click() && !card.played) {
+        hoveringCard = card;
+        break;
+      }
+    }
+  
+    // Set the hoveredCard property of the deck to the hoveringCard
+    GameInfo.playerDeck.hoveredCard = hoveringCard;
+  }
+  
 }
+
+
 
 
 
