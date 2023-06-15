@@ -7,13 +7,27 @@ class Card {
     this.x = x;
     this.y = y;
     this.img = img;
+    this.cardx = img.width;
+    this.cardy = img.height;
     this.position = position;
     this.played = false;
+
+        // drag stuff
+        // these will be set outside 
+        this.draggable = false;
+        this.dragAction = undefined;
+        // these are only to be used inside
+        this.dragging = false;
+        this.offsety = 0;
+        this.offsetx = 0;
+        this.dragx = 0;
+        this.dragy = 0;;
   }
 
   draw() {
-    if (!this.card.active);
-    image(this.img, this.x, this.y, Card.width, Card.height);
+    if (!this.card.active) {
+      image(this.img, this.x, this.y, Card.width, Card.height);
+    }
 
     textAlign(CENTER, CENTER);
     fill(255);
@@ -21,7 +35,6 @@ class Card {
     textSize(18);
     stroke(0);
     strokeWeight(2);
-    //text(this.card.cost, this.x + Card.width * 0.905 - 6, this.y + Card.height * 0.065);
     strokeWeight(1);
     noStroke();
     fill(0);
@@ -29,12 +42,31 @@ class Card {
     text(this.card.name, this.x + Card.width * 0.5, this.y + Card.height * 0.60);
     textSize(12);
     textAlign(CENTER, TOP);
-    text(this.card.attack,this.x + Card.width * 0.15,this.y + Card.height * 0.77,Card.width * 0.8,Card.height * 0.1);
+    text(
+      this.card.attack,
+      this.x + Card.width * 0.15,
+      this.y + Card.height * 0.77,
+      Card.width * 0.8,
+      Card.height * 0.1
+    );
     if (this.card.note) {
-      text(this.card.note,this.x + Card.width * 0.1,this.y + Card.height * 0.8,Card.width * 0.8,Card.height * 0.15);
+      text(
+        this.card.note,
+        this.x + Card.width * 0.1,
+        this.y + Card.height * 0.8,
+        Card.width * 0.8,
+        Card.height * 0.15
+      );
     }
     textStyle(NORMAL);
     noTint();
+
+    if (this.dragging) {
+      tint(255, 100);
+      image(this.img, this.dragx, this.dragy, this.width, this.height,
+        this.cardx * (this.number - 1), 0, this.cardx, this.cardy);
+      tint(255, 255);
+    }
   }
 
   click() {
@@ -49,7 +81,34 @@ class Card {
   play() {
     this.played = true;
   }
+
+  update() {
+    // Adjust location if being dragged
+    if (this.dragging) {
+        this.dragx = mouseX + this.offsetX;
+        this.dragy = mouseY + this.offsetY;
+    }
 }
+
+
+press() {
+    if (this.draggable &&
+        mouseX > this.x && mouseX < this.x + this.width &&
+        mouseY > this.y && mouseY < this.y + this.height) {
+        this.dragging = true;
+        // If so, keep track of relative location of click to corner of rectangle
+        this.offsetX = this.x - mouseX;
+        this.offsetY = this.y - mouseY;
+    }
+}
+release() {
+    this.dragging = false;
+    if (this.draggable && this.dragAction) {
+        this.dragAction(mouseX, mouseY, this.number);
+    }
+}
+}
+
 
 class Deck {
   static titleHeight = 50;
@@ -63,39 +122,42 @@ class Deck {
     this.clickAction = clickAction;
     this.cardImg = cardImg;
     this.cards = this.createCards(cardsInfo);
-    this.hoveredCard = null; // New property to store the hovered card
+    this.hoveredCard = null;
   }
 
   createCards(cardsInfo) {
     let cards = [];
     let x = this.x;
     let position = 1;
-    let hasPositionProperty = cardsInfo.every(cardInfo => cardInfo.hasOwnProperty('position'));
-  
+    let hasPositionProperty = cardsInfo.every(cardInfo =>
+      cardInfo.hasOwnProperty("position")
+    );
+
     for (let cardInfo of cardsInfo) {
       if (hasPositionProperty) {
         let adjustedPosition = cardInfo.position - 1;
         let offsetX = adjustedPosition * (Card.width + 15);
         x = this.x + offsetX;
       }
-  
-      cards.push(new Card(cardInfo, x, this.y + Deck.titleHeight, this.cardImg, position));
-  
+
+      cards.push(
+        new Card(cardInfo, x, this.y + Deck.titleHeight, this.cardImg, position)
+      );
+
       if (!hasPositionProperty) {
         x += Card.width + 15;
       }
-  
+
       position++;
     }
-  
+
     return cards;
   }
 
   update(cardsInfo) {
     for (let card of this.cards) {
-      // Check if the card is the Angel and has not been played before
-      if (card.card.name === 'Angel' && !card.played && card.card.ugc_played_turn === 1) {
-        card.play(); // Play the card
+      if (card.card.name === "Angel" && !card.played && card.card.ugc_played_turn === 1) {
+        card.play();
       }
     }
     this.cards = this.createCards(cardsInfo);
@@ -112,7 +174,6 @@ class Deck {
     }
 
     if (this.hoveredCard) {
-      // Draw a highlight around the hovered card
       stroke(181, 80, 0);
       strokeWeight(2);
       noFill();
@@ -131,23 +192,21 @@ class Deck {
   }
 
   mouseMoved() {
-    // Check if the mouse is hovering over a card in the deck
     let hoveringCard = null;
-  
+
     for (let card of GameInfo.playerDeck.cards) {
       if (card.click() && !card.played) {
         hoveringCard = card;
         break;
       }
     }
-  
-    // Set the hoveredCard property of the deck to the hoveringCard
-    GameInfo.playerDeck.hoveredCard = hoveringCard;
+
+    this.hoveredCard = hoveringCard;
   }
-  
+
+  updateCards() {
+    for (let card of this.cards) {
+      card.update();
+    }
+  }
 }
-
-
-
-
-

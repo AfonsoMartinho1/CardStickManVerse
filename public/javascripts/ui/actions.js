@@ -33,7 +33,7 @@ async function getDecksInfo() {
                 GameInfo.width/2-339,
                 GameInfo.height/2+175,
                 playCard,
-                GameInfo.images.playercard
+                GameInfo.images.opponentcard
             );
         }
         if (GameInfo.oppDeck) GameInfo.oppDeck.update(GameInfo.matchDecks.oppcards); 
@@ -52,12 +52,13 @@ async function getBoardInfo() {
         console.log(GameInfo.matchBoard.mycards);
         if (GameInfo.playerBoard) GameInfo.playerBoard.update(GameInfo.matchBoard.mycards); 
         else GameInfo.playerBoard = new Deck(" ",
-            GameInfo.matchBoard.mycards,GameInfo.width/2-141,GameInfo.height/2-7,playCard,GameInfo.images.playercard);
+            GameInfo.matchBoard.mycards,GameInfo.width/2-141,GameInfo.height/2-7,playCard,GameInfo.images.opponentcard);
         if (GameInfo.oppBoard) GameInfo.oppBoard.update(GameInfo.matchBoard.oppcards); 
         else GameInfo.oppBoard = new Deck(" ",
-            GameInfo.matchBoard.oppcards,GameInfo.width/2-143,GameInfo.height/2-207,null,GameInfo.images.playercard);
+            GameInfo.matchBoard.oppcards,GameInfo.width/2-143,GameInfo.height/2-207,null,GameInfo.images.opponentcard);
     }
 }
+
 
 async function playCard(card) {
     console.log(Object.keys(card));

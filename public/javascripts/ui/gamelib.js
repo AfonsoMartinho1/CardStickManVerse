@@ -1,3 +1,5 @@
+const { endTurn } = require("../../../models/playsModel");
+
 async function refresh() {
   if (GameInfo.game.player.state == 'Waiting') {
     // Every time we are waiting
@@ -9,6 +11,8 @@ async function refresh() {
       GameInfo.prepareUI();
       await playCard();
       await combatHandler();
+      await endTurn();
+      await giveRandomCard(game);
     }
   }
   // Nothing to do when we are playing since we control all that happens
@@ -16,7 +20,6 @@ async function refresh() {
 }
 
 function preload() {
-  GameInfo.images.playercard = loadImage('/assets/cardstickman.png');
   GameInfo.images.opponentcard = loadImage('/assets/cardstickman180degrees.png');
   GameInfo.images.board = loadImage('/assets/boardv4.png');
   GameInfo.images.losingImage = loadImage('/assets/lose background.png');

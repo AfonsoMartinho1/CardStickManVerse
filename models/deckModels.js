@@ -1,16 +1,13 @@
 const pool = require("../config/database");
 const Settings = require("../models/gameSettings")
 
-let draggedCard = null;
-let initialCardPosition = null;
-
 function fromDBCardToCard(dbCard) {
     return new Card(dbCard.crd_id, dbCard.ugc_id,
         dbCard.crd_name, dbCard.crd_abl, dbCard.crd_atk, dbCard.crd_def, dbCard.crd_desc);
 }
 
 class Card {
-    constructor(cardId, deckId, name, hability, attack, defence, description) {
+    constructor(cardId, deckId, name, hability, attack, defence, description, cardImg) {
         this.cardId = cardId;
         this.deckId = deckId;
         this.name = name;
@@ -18,6 +15,7 @@ class Card {
         this.cost = defence;
         this.type = hability;
         this.description = description
+        this.cardImg
     }
 
     static async genCard(playerId) {
