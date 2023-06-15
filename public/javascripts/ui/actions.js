@@ -58,6 +58,7 @@ async function getBoardInfo() {
             GameInfo.matchBoard.oppcards,GameInfo.width/2-143,GameInfo.height/2-207,null,GameInfo.images.playercard);
     }
 }
+
 async function playCard(card) {
     console.log(Object.keys(card));
     let position = parseInt(prompt("What position would you like to place the card? 1, 2, or 3?"));

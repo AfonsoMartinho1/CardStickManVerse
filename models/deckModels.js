@@ -1,6 +1,9 @@
 const pool = require("../config/database");
 const Settings = require("../models/gameSettings")
 
+let draggedCard = null;
+let initialCardPosition = null;
+
 function fromDBCardToCard(dbCard) {
     return new Card(dbCard.crd_id, dbCard.ugc_id,
         dbCard.crd_name, dbCard.crd_abl, dbCard.crd_atk, dbCard.crd_def, dbCard.crd_desc);
@@ -119,6 +122,7 @@ class MatchDecks {
 
     static async playCard(game, deckId, position) {
         try {
+
             // Check board and hand position and players ids
             let [dbcards] = await pool.query(`
                 SELECT *

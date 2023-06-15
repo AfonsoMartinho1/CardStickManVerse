@@ -121,7 +121,7 @@ class Game {
             let [result] = await pool.query(`Insert into game (gm_state_id) values (?)`, [1]);
             let gameId = result.insertId;
             // add the user to the game
-            await pool.query(`Insert into user_game (ug_user_id,ug_game_id,ug_state_id) values (?,?,?)`,
+            await pool.query(`Insert into user_game (ug_user_id,ug_game_id,ug_state_id,ug_hp) values (?,?,?,5000)`,
                  [userId, gameId, 1]);
             return {status:200, result: {msg: "You created a new game."}};
         } catch (err) {
