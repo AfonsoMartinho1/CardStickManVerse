@@ -1,5 +1,3 @@
-const { endTurn } = require("../../../models/playsModel");
-
 async function refresh() {
   if (GameInfo.game.player.state == 'Waiting') {
     // Every time we are waiting
@@ -12,7 +10,7 @@ async function refresh() {
       await playCard();
       await combatHandler();
       await endTurn();
-      await giveRandomCard(game);
+      await giveRandomCard();
     }
   }
   // Nothing to do when we are playing since we control all that happens
@@ -20,6 +18,28 @@ async function refresh() {
 }
 
 function preload() {
+  
+  GameInfo.images.Stickman = loadImage('/assets/cardstickmanBob.png'),
+  GameInfo.images.Bomber = loadImage('/assets/cardstickmanBomber.png'),
+  GameInfo.images.Chef = loadImage('/assets/cardstickmanChef.png'),
+  GameInfo.images.Angel = loadImage('/assets/cardstickmanAngel.png'),
+  GameInfo.images.Cyborg = loadImage('/assets/cardstickmanCyborg.png'),
+  GameInfo.images.DrFamiliar = loadImage('/assets/cardstickmanDoctor.png'),
+  GameInfo.images.GameDev = loadImage('/assets/cardstickmanGameDev.png'),
+  GameInfo.images.Hitman = loadImage('/assets/cardstickmanHitman.png'),
+  GameInfo.images.Joker = loadImage('/assets/cardstickmanJoker.png'),
+  GameInfo.images.BobNaldo = loadImage('/assets/cardstickmanNaldo.png'),
+  GameInfo.images.Ninja = loadImage('/assets/cardstickmanNinja.png'),
+  GameInfo.images.Pirate = loadImage('/assets/cardstickmanPirate.png'),
+  GameInfo.images.Reaper = loadImage('/assets/cardstickmanReaper.png'),
+  GameInfo.images.BobRocky = loadImage('/assets/cardstickmanRocky.png'),
+  GameInfo.images.Samurai = loadImage('/assets/cardstickmanSamurai.png'),
+  GameInfo.images.SuperBob = loadImage('/assets/cardstickmanSuperBob.png'),
+  GameInfo.images.SusBob = loadImage('/assets/cardstickmanSus.png'),
+  GameInfo.images.Warrior = loadImage('/assets/cardstickmanWarrior.png'),
+  GameInfo.images.Soldier = loadImage('/assets/cardstickmanSoldier.png'),
+  GameInfo.images.Bob = loadImage('/assets/cardstickmanReal.png')
+  
   GameInfo.images.opponentcard = loadImage('/assets/cardstickman180degrees.png');
   GameInfo.images.board = loadImage('/assets/boardv4.png');
   GameInfo.images.losingImage = loadImage('/assets/lose background.png');
@@ -39,7 +59,7 @@ async function setup() {
     if (GameInfo.game.player.hp > 0 && GameInfo.game.opponents[0].hp > 0) {
       GameInfo.endturnButton.position(GameInfo.width - 125, GameInfo.height - 700);
     } else if (GameInfo.game.player.hp <= 0 || GameInfo.game.opponents[0].hp <= 0) {
-      GameInfo.endturnButton.position(GameInfo.width - 2000, GameInfo.height - 2000);
+      GameInfo.endturnButton.position(GameInfo.width - 5000, GameInfo.height - 5000);
     }
     GameInfo.endturnButton.mousePressed(endturnAction);
     GameInfo.endturnButton.addClass('game');

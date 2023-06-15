@@ -3,7 +3,7 @@ const Settings = require("../models/gameSettings")
 
 function fromDBCardToCard(dbCard) {
     return new Card(dbCard.crd_id, dbCard.ugc_id,
-        dbCard.crd_name, dbCard.crd_abl, dbCard.crd_atk, dbCard.crd_def, dbCard.crd_desc);
+        dbCard.crd_name, dbCard.crd_abl, dbCard.crd_atk, dbCard.crd_def, dbCard.crd_desc, dbCard.cardImg);
 }
 
 class Card {
